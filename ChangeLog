@@ -4,3 +4,4 @@
 	* Added news sitemap
 	* Fixed: current page ID was not determined correctly with RealURL
 	* Changed news item sorting in news sitemap (newer items first)
+	* Added check for 0 when validating storage page id

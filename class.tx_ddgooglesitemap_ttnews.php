@@ -146,7 +146,7 @@ class tx_ddgooglesitemap_ttnews {
 		$pidList = t3lib_div::intExplode(',', t3lib_div::GPvar('pidList'));
 		// Check pages
 		foreach ($pidList as $pid) {
-			if ($this->isInRootline($pid)) {
+			if ($pid && $this->isInRootline($pid)) {
 				$this->pidList[$pid] = $pid;
 			}
 		}
