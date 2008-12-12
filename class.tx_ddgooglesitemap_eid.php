@@ -50,6 +50,7 @@ class tx_ddgooglesitemap_eid {
 	const	SITEMAP_TYPE_NEWS = 1;
 
 	public function __construct() {
+		@set_time_limit(300);
 		$this->initTSFE();
 	}
 
@@ -64,6 +65,8 @@ class tx_ddgooglesitemap_eid {
 				$this->generatePagesSitemap();
 				break;
 			case self::SITEMAP_TYPE_NEWS:
+				$this->generateNewsSitemap();
+				break;
 			default:
 				$this->generateError();
 		}
@@ -88,6 +91,18 @@ class tx_ddgooglesitemap_eid {
 		t3lib_div::requireOnce(t3lib_extMgm::extPath('dd_googlesitemap', 'class.tx_ddgooglesitemap_pages.php'));
 		$generator = t3lib_div::makeInstance('tx_ddgooglesitemap_pages');
 		/* @var $generator tx_ddgooglesitemap_pages */
+		$generator->main();
+	}
+
+	/**
+	 * Generates sitemap for news
+	 *
+	 * @return	void
+	 */
+	protected function generateNewsSitemap() {
+		t3lib_div::requireOnce(t3lib_extMgm::extPath('dd_googlesitemap', 'class.tx_ddgooglesitemap_ttnews.php'));
+		$generator = t3lib_div::makeInstance('tx_ddgooglesitemap_ttnews');
+		/* @var $generator tx_ddgooglesitemap_ttnews */
 		$generator->main();
 	}
 
@@ -134,6 +149,7 @@ class tx_ddgooglesitemap_eid {
 		}
 		$GLOBALS['TSFE']->connectToMySQL();
 		$GLOBALS['TSFE']->initFEuser();
+		$GLOBALS['TSFE']->checkAlternativeIdMethods();
 		$GLOBALS['TSFE']->determineId();
 		$GLOBALS['TSFE']->getCompressedTCarray();
 		$GLOBALS['TSFE']->initTemplate();
