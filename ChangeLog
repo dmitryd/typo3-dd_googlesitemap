@@ -3,3 +3,4 @@
 	* Initial code with sitemap for pages
 	* Added news sitemap
 	* Fixed: current page ID was not determined correctly with RealURL
+	* Changed news item sorting in news sitemap (newer items first)

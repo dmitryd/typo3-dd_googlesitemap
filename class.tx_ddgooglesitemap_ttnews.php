@@ -100,7 +100,7 @@ class tx_ddgooglesitemap_ttnews {
 			t3lib_div::loadTCA('tt_news');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,datetime,keywords',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
-				$this->cObj->enableFields('tt_news')
+				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
 			);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				if (($url = $this->getNewsItemUrl($row['uid']))) {
