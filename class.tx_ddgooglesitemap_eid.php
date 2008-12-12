@@ -25,7 +25,7 @@
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
  *
- * $Id: $
+ * $Id$
  */
 
 require_once(PATH_tslib . 'class.tslib_pagegen.php');
