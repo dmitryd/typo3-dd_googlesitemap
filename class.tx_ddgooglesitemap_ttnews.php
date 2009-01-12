@@ -104,6 +104,7 @@ class tx_ddgooglesitemap_ttnews {
 			);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				if (($url = $this->getNewsItemUrl($row['uid']))) {
+					echo '<url>' . chr(10);
 					echo '<loc>' . $url . '</loc>' . chr(10);
 					echo '<news:news>' . chr(10);
 					echo '<news:publication_date>' . date('c', $row['datetime']) . '</news:publication_date>' . chr(10);
@@ -111,6 +112,7 @@ class tx_ddgooglesitemap_ttnews {
 						echo '<news:keywords>' . htmlspecialchars($row['keywords']) . '</news:keywords>' . chr(10);
 					}
 					echo '</news:news>' . chr(10);
+					echo '</url>' . chr(10);
 				}
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);

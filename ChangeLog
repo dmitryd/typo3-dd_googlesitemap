@@ -1,3 +1,7 @@
+2009-01-12  Dmitry Dulepov  <dmitry@typo3.org>
+
+	* Fixed: missing <url> tag in the news sitemap
+
 2008-12-12  Dmitry Dulepov  <dmitry@typo3.org>
 
 	* Initial code with sitemap for pages
