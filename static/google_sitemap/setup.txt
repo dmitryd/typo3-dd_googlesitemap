@@ -1,5 +1,0 @@
-# Google Sitemap plugin definition
-plugin.tx_ddgooglesitemap {
-startingPid =
-type = pages
-}

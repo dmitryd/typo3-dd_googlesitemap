@@ -2,7 +2,6 @@
 if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-//t3lib_extMgm::addStaticFile($_EXTKEY,'static/google_sitemap/', 'Google sitemap');
 
 $tempColumns = Array (
 	'tx_ddgooglesitemap_lastmod' => Array (

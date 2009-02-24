@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Google sitemap',
-	'description' => 'Google sitemap implementation that avoid typical errors by other similar extensions (like double domain name in the sitemap).',
+	'description' => 'High performance Google sitemap implementation that avoids typical errors by other similar extensions',
 	'category' => 'fe',
 	'author' => 'Dmitry Dulepov',
 	'author_email' => 'dmitry@typo3.org',
@@ -21,7 +21,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'beta',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
