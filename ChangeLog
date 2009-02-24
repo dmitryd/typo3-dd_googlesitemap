@@ -3,6 +3,8 @@
 	* Added an option to skip root line check for news
 	* Added documentation
 	* Clean up before uploading to TER
+	* Released version 1.0.0
+	* Fixed bug #2691: GPvar is deprecated in 4.3
 
 2009-01-12  Dmitry Dulepov  <dmitry@typo3.org>
 

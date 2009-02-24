@@ -78,7 +78,7 @@ class tx_ddgooglesitemap_ttnews {
 	 * @return	void
 	 */
 	public function __construct() {
-		$singlePid = intval(t3lib_div::GPvar('singlePid'));
+		$singlePid = intval(t3lib_div::_GP('singlePid'));
 		$this->singlePid = $singlePid && $this->isInRootline($singlePid) ? $singlePid : $GLOBALS['TSFE']->id;
 
 		$this->validateAndcreatePageList();
@@ -145,7 +145,7 @@ class tx_ddgooglesitemap_ttnews {
 	 */
 	protected function validateAndcreatePageList() {
 		// Get pages
-		$pidList = t3lib_div::intExplode(',', t3lib_div::GPvar('pidList'));
+		$pidList = t3lib_div::intExplode(',', t3lib_div::_GP('pidList'));
 		// Check pages
 		foreach ($pidList as $pid) {
 			if ($pid && $this->isInRootline($pid)) {

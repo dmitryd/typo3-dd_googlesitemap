@@ -112,7 +112,7 @@ class tx_ddgooglesitemap_eid {
 	 * @return	int	One of SITEMAP_TYPE_xxx constants
 	 */
 	protected function getSitemapType() {
-		$type = t3lib_div::GPvar('sitemap');
+		$type = t3lib_div::_GP('sitemap');
 		return ($type == 'news' ? self::SITEMAP_TYPE_NEWS : self::SITEMAP_TYPE_PAGES);
 	}
 
@@ -124,7 +124,7 @@ class tx_ddgooglesitemap_eid {
 	protected function initTSFE() {
 		$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
 
-		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::GPvar('id'), '');
+		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
 
 		$initCache = !isset($GLOBALS['typo3CacheManager']) && version_compare(TYPO3_branch, '4.3', '>=');
 		if ($initCache) {
