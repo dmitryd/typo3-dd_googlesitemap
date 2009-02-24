@@ -161,12 +161,17 @@ class tx_ddgooglesitemap_ttnews {
 	 * @return	boolean	true if page is in the root line
 	 */
 	protected function isInRootline($pid) {
-		$result = false;
-		$rootline = $GLOBALS['TSFE']->sys_page->getRootLine($pid);
-		foreach ($rootline as $row) {
-			if ($row['uid'] == $GLOBALS['TSFE']->id) {
-				$result = true;
-				break;
+		if ($GLOBALS['TSFE']->config['config']['tx_ddgooglesitemap_skipRootlineCheck']) {
+			$result = true;
+		}
+		else {
+			$result = false;
+			$rootline = $GLOBALS['TSFE']->sys_page->getRootLine($pid);
+			foreach ($rootline as $row) {
+				if ($row['uid'] == $GLOBALS['TSFE']->id) {
+					$result = true;
+					break;
+				}
 			}
 		}
 		return $result;
