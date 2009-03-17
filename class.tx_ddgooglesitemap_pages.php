@@ -135,7 +135,16 @@ class tx_ddgooglesitemap_pages {
 	 * @return	void
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
-		if (($url = $this->getPageLink($pageInfo['uid']))) {
+		// We ignore non-visible page types!
+		if ($pageInfo['doktype'] != 3 &&
+			$pageInfo['doktype'] != 4 &&
+			$pageInfo['doktype'] != 5 &&
+			$pageInfo['doktype'] != 6 &&
+			$pageInfo['doktype'] != 7 &&
+			$pageInfo['doktype'] != 199 &&
+			$pageInfo['doktype'] != 254 &&
+			$pageInfo['doktype'] != 255 &&
+				($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url,
 				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
 				$this->getChangeFrequency($pageInfo));

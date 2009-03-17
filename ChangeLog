@@ -1,6 +1,7 @@
 2009-03-17  Dmitry Dulepov  <dmitry@typo3.org>
 
 	* Fixed bug #2704: Shortcut on top level messes up the whole sitemap
+	* Fixed bug #2693: Page type Shortcut adds second entry for page
 
 2009-02-25  Dmitry Dulepov  <dmitry@typo3.org>
 
