@@ -5,6 +5,7 @@
 	* Fixed bug #2693: Page type Shortcut adds second entry for page
 	* Fixed bug #2692: Pages of type "Visual menu separator" are included in sitemap
 	* Fixed bug #2867: Exclude 'no search' pages from the sitemap
+	* Released version 1.0.1
 
 2009-02-25  Dmitry Dulepov  <dmitry@typo3.org>
 
