@@ -6,6 +6,7 @@
 	* Fixed bug #2692: Pages of type "Visual menu separator" are included in sitemap
 	* Fixed bug #2867: Exclude 'no search' pages from the sitemap
 	* Released version 1.0.1
+	* Apply 'forceStartPid' to news sitemaps too
 
 2009-02-25  Dmitry Dulepov  <dmitry@typo3.org>
 

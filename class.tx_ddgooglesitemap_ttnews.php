@@ -190,9 +190,13 @@ class tx_ddgooglesitemap_ttnews {
 		}
 		else {
 			$result = false;
+			$rootPid = intval($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['forceStartPid']);
+			if ($rootPid == 0) {
+				$rootPid = $GLOBALS['TSFE']->id;
+			}
 			$rootline = $GLOBALS['TSFE']->sys_page->getRootLine($pid);
 			foreach ($rootline as $row) {
-				if ($row['uid'] == $GLOBALS['TSFE']->id) {
+				if ($row['uid'] == $rootPid) {
 					$result = true;
 					break;
 				}
