@@ -28,6 +28,7 @@
  * $Id$
  */
 
+require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_normal_renderer.php'));
 
 /**
  * This class produces sitemap for pages
@@ -54,13 +55,21 @@ class tx_ddgooglesitemap_pages {
 	protected $cObj;
 
 	/**
+	 * A sitemap rendere
+	 *
+	 * @var	tx_ddgooglesitemap_normal_renderer
+	 */
+	protected $renderer;
+
+	/**
 	 * Initializes the instance of this class. This constructir sets starting
 	 * point for the sitemap to the current page id
 	 *
 	 * @return	void
 	 */
 	public function __construct() {
-		$this->pageList[$GLOBALS['TSFE']->id] = array(
+		$pid = intval($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['forceStartPid']);
+		$this->pageList[$pid ? $pid : $GLOBALS['TSFE']->id] = array(
 			'uid' => $GLOBALS['TSFE']->id,
 			'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 			'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
@@ -68,6 +77,8 @@ class tx_ddgooglesitemap_pages {
 
 		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 		$this->cObj->start(array());
+
+		$this->renderer = t3lib_div::makeInstance('tx_ddgooglesitemap_normal_renderer');
 	}
 
 	/**
@@ -78,14 +89,13 @@ class tx_ddgooglesitemap_pages {
 	public function main() {
 		// Start
 		header('Content-type: text/xml');
-		echo '<?xml version="1.0" encoding="UTF-8"?>' . chr(10);
-		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10);
+		echo $this->renderer->getStartTags();
 
 		// Generate URLs
 		$this->generateSitemapForPages();
 
 		// End
-		echo '</urlset>';
+		echo $this->renderer->getEndTags();
 	}
 
 	/**
@@ -116,14 +126,9 @@ class tx_ddgooglesitemap_pages {
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
 		if (($url = $this->getPageLink($pageInfo['uid']))) {
-			echo '<url>' . chr(10);
-			echo '<loc>' . $url . '</loc>' . chr(10);
-			if ($pageInfo['SYS_LASTCHANGED'] > 24*60*60) {
-				echo '<lastmod>' . date('c', $pageInfo['SYS_LASTCHANGED']) . '</lastmod>' . chr(10);
-			}
-			echo '<changefreq>' . $this->getChangeFrequency($pageInfo) . '</changefreq>' . chr(10);
-			//echo '<priority>0.8</priority>' . chr(10);
-			echo '</url>' . chr(10);
+			echo $this->renderer->renderEntry($url,
+				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
+				$this->getChangeFrequency($pageInfo));
 		}
 	}
 

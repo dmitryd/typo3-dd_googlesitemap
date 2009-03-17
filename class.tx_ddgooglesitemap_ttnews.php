@@ -28,6 +28,8 @@
  * $Id$
  */
 
+require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_normal_renderer.php'));
+require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_news_renderer.php'));
 
 /**
  * This class implements news sitemap
@@ -73,6 +75,13 @@ class tx_ddgooglesitemap_ttnews {
 	protected $singlePid;
 
 	/**
+	 * A sitemap rendere
+	 *
+	 * @var	tx_ddgooglesitemap_abstract_renderer
+	 */
+	protected $renderer;
+
+	/**
 	 * Creates an instance of this class
 	 *
 	 * @return	void
@@ -85,6 +94,11 @@ class tx_ddgooglesitemap_ttnews {
 
 		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 		$this->cObj->start(array());
+
+		// Determine renderer type for news
+		$rendererClass = (t3lib_div::_GET('type') === 'news' ?
+			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
+		$this->renderer = t3lib_div::makeInstance($rendererClass);
 	}
 
 	/**
@@ -94,30 +108,34 @@ class tx_ddgooglesitemap_ttnews {
 	 */
 	public function main() {
 		header('Content-type: text/xml');
-		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' .
-			'xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">' . chr(10);
+		echo $this->renderer->getStartTags();
+
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,datetime,keywords',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
 			);
+			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				if (($url = $this->getNewsItemUrl($row['uid']))) {
-					echo '<url>' . chr(10);
-					echo '<loc>' . $url . '</loc>' . chr(10);
-					echo '<news:news>' . chr(10);
-					echo '<news:publication_date>' . date('c', $row['datetime']) . '</news:publication_date>' . chr(10);
-					if ($row['keywords']) {
-						echo '<news:keywords>' . htmlspecialchars($row['keywords']) . '</news:keywords>' . chr(10);
-					}
-					echo '</news:news>' . chr(10);
-					echo '</url>' . chr(10);
+					echo $this->renderer->renderEntry($url, $row['datetime'],
+						'', $row['keywords']);
 				}
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+			if ($rowCount === 0) {
+				echo '<!-- It appears that there are no tt_news entries. If your ' .
+					'news storage sysfolder is outside of the rootline, you may ' .
+					'want to use the dd_googlesitemap.skipRootlineCheck=1 TS ' .
+					'setup option. Beware: it is insecure and may cause certain ' .
+					'undesired effects! Better move your news sysfolder ' .
+					'inside the rootline! -->';
+			}
 		}
-		echo '</urlset>';
+
+		echo $this->renderer->getEndTags();
 	}
 
 	/**
@@ -161,7 +179,13 @@ class tx_ddgooglesitemap_ttnews {
 	 * @return	boolean	true if page is in the root line
 	 */
 	protected function isInRootline($pid) {
-		if ($GLOBALS['TSFE']->config['config']['tx_ddgooglesitemap_skipRootlineCheck']) {
+		if (isset($GLOBALS['TSFE']->config['config']['tx_ddgooglesitemap_skipRootlineCheck'])) {
+			$skipRootlineCheck = $GLOBALS['TSFE']->config['config']['tx_ddgooglesitemap_skipRootlineCheck'];
+		}
+		else {
+			$skipRootlineCheck = $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['skipRootlineCheck'];
+		}
+		if ($skipRootlineCheck) {
 			$result = true;
 		}
 		else {
