@@ -69,11 +69,21 @@ class tx_ddgooglesitemap_pages {
 	 */
 	public function __construct() {
 		$pid = intval($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['forceStartPid']);
-		$this->pageList[$pid ? $pid : $GLOBALS['TSFE']->id] = array(
-			'uid' => $GLOBALS['TSFE']->id,
-			'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
-			'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
-		);
+		if ($pid === 0 || $pid == $GLOBALS['TSFE']->id) {
+			$this->pageList[$GLOBALS['TSFE']->id] = array(
+				'uid' => $GLOBALS['TSFE']->id,
+				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
+				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
+			);
+		}
+		else {
+			$page = $GLOBALS['TSFE']->sys_page->getPage($pid);
+			$this->pageList[$page['uid']] = array(
+				'uid' => $page['uid'],
+				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
+				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
+			);
+		}
 
 		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
 		$this->cObj->start(array());

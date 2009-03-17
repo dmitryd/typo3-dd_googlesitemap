@@ -1,3 +1,7 @@
+2009-03-17  Dmitry Dulepov  <dmitry@typo3.org>
+
+	* Fixed bug #2704: Shortcut on top level messes up the whole sitemap
+
 2009-02-25  Dmitry Dulepov  <dmitry@typo3.org>
 
 	* Added an option to skip root line check for news
