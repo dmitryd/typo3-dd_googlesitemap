@@ -1,5 +1,6 @@
 2009-03-17  Dmitry Dulepov  <dmitry@typo3.org>
 
+	* Fixed bug #2862: tt_news sitemap should produce a page sitemap
 	* Fixed bug #2704: Shortcut on top level messes up the whole sitemap
 	* Fixed bug #2693: Page type Shortcut adds second entry for page
 	* Fixed bug #2692: Pages of type "Visual menu separator" are included in sitemap
