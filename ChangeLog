@@ -1,6 +1,7 @@
 2009-03-18  Dmitry Dulepov  <dmitry@typo3.org>
 
 	* Fixed problem: doktype and no_search were not available
+	* Released version 1.0.3
 
 2009-03-17  Dmitry Dulepov  <dmitry@typo3.org>
 
