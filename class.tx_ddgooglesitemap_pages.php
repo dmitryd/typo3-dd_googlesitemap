@@ -124,7 +124,7 @@ class tx_ddgooglesitemap_pages {
 			//
 			// Notice: no sorting (for speed)!
 			$this->pageList += $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod', '');
+					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod', '');
 		}
 	}
 
