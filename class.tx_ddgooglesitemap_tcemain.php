@@ -81,22 +81,28 @@ class tx_ddgooglesitemap_tcemain {
 		if (($pid = $this->getPid($table, $id, $fieldArray, $pObj))) {
 			$record = t3lib_BEfunc::getRecord('pages', $pid, 'tx_ddgooglesitemap_lastmod');
 			$elements = $record['tx_ddgooglesitemap_lastmod'] == '' ? array() : t3lib_div::trimExplode(',', $record['tx_ddgooglesitemap_lastmod']);
-			$elements[] = time();
-			if (count($elements) > self::MAX_ENTRIES) {
-				$elements = array_slice($elements, -self::MAX_ENTRIES);
-			}
+			$time = time();
+			// We must check if this time stamp is already in the list. This
+			// happens with many independent updates of the page during a
+			// single TCEmain action
+			if (!in_array($time, $elements)) {
+				$elements[] = $time;
+				if (count($elements) > self::MAX_ENTRIES) {
+					$elements = array_slice($elements, -self::MAX_ENTRIES);
+				}
 
-			$datamap = array(
-				'pages' => array(
-					$pid => array(
-						'tx_ddgooglesitemap_lastmod' => implode(',', $elements),
+				$datamap = array(
+					'pages' => array(
+						$pid => array(
+							'tx_ddgooglesitemap_lastmod' => implode(',', $elements),
+						),
 					),
-				),
-			);
-			$tce = t3lib_div::makeInstance('t3lib_TCEmain');
-			/* @var $tce t3lib_TCEmain */
-			$tce->start($datamap, null);
-			$tce->process_datamap();
+				);
+				$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+				/* @var $tce t3lib_TCEmain */
+				$tce->start($datamap, null);
+				$tce->process_datamap();
+			}
 		}
 	}
 

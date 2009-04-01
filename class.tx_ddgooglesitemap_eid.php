@@ -125,28 +125,6 @@ class tx_ddgooglesitemap_eid {
 		$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
 
 		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-
-		$initCache = !isset($GLOBALS['typo3CacheManager']) && version_compare(TYPO3_branch, '4.3', '>=');
-		if ($initCache) {
-			require_once(PATH_t3lib . 'class.t3lib_cache.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_abstractbackend.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_abstractcache.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_exception.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_factory.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_manager.php');
-			require_once(PATH_t3lib . 'cache/class.t3lib_cache_variablecache.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_classalreadyloaded.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_duplicateidentifier.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_invalidbackend.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_invalidcache.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_invaliddata.php');
-			require_once(PATH_t3lib . 'cache/exception/class.t3lib_cache_exception_nosuchcache.php');
-			$GLOBALS['typo3CacheManager'] = t3lib_div::makeInstance('t3lib_cache_Manager');
-			$cacheFactoryClass = t3lib_div::makeInstanceClassName('t3lib_cache_Factory');
-			$GLOBALS['typo3CacheFactory'] = new $cacheFactoryClass($GLOBALS['typo3CacheManager']);
-			unset($cacheFactoryClass);
-			$GLOBALS['TSFE']->initCaches();
-		}
 		$GLOBALS['TSFE']->connectToMySQL();
 		$GLOBALS['TSFE']->initFEuser();
 		$GLOBALS['TSFE']->checkAlternativeIdMethods();
