@@ -1,3 +1,7 @@
+2010-01-09  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fix: wrong XCLASS in TCEmain hook
+
 2009-04-01  Dmitry Dulepov  <dmitry@typo3.org>
 
 	* Prevent duplicate timestamps in the lastmod field
