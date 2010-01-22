@@ -122,10 +122,14 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	protected function initTSFE() {
-		$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
-
-		$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-		$GLOBALS['TSFE']->connectToMySQL();
+		if (version_compare(TYPO3_version, '4.3', '<')) {
+			$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
+			$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
+		}
+		else {
+			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
+		}
+		$GLOBALS['TSFE']->connectToDB();
 		$GLOBALS['TSFE']->initFEuser();
 		$GLOBALS['TSFE']->checkAlternativeIdMethods();
 		$GLOBALS['TSFE']->determineId();

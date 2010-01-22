@@ -1,3 +1,7 @@
+2010-01-09  Dmitry Dulepov  <dmitry.dulepov+typo3svn@gmail.com>
+
+	* Fixed: deprecated calls
+
 2010-01-09  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fix: wrong XCLASS in TCEmain hook
