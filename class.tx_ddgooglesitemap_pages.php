@@ -146,7 +146,7 @@ class tx_ddgooglesitemap_pages {
 			$pageInfo['doktype'] != 255 &&
 			$pageInfo['no_search'] == 0 &&
 				($url = $this->getPageLink($pageInfo['uid']))) {
-			echo $this->renderer->renderEntry($url,
+			echo $this->renderer->renderEntry($url, $pageinfo['title'],
 				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
 				$this->getChangeFrequency($pageInfo));
 		}

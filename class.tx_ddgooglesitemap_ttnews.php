@@ -113,13 +113,14 @@ class tx_ddgooglesitemap_ttnews {
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,datetime,keywords',
-				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
+				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ') AND ' .
+				'crdate>=' . (time() - 48*60*60) .
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
 			);
 			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				if (($url = $this->getNewsItemUrl($row['uid']))) {
-					echo $this->renderer->renderEntry($url, $row['datetime'],
+					echo $this->renderer->renderEntry($url, $row['title'], $row['datetime'],
 						'', $row['keywords']);
 				}
 			}

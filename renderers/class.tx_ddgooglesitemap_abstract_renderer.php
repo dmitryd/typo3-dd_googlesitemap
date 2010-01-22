@@ -32,6 +32,9 @@
 /**
  * This class contains an abstract renderer for sitemaps.
  *
+ * NOTE: interface is internal and it is not stable. Any XCLASS is not guarantied
+ * to work!
+ *
  * @author	Dmitry Dulepov <dmitry@typo3.org>
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
@@ -49,12 +52,14 @@ abstract class tx_ddgooglesitemap_abstract_renderer {
 	 * Renders one single entry according to the format of this sitemap.
 	 *
 	 * @param	string	$url	URL of the entry
-	 * @param	int	$lastModification	Last modification time (as unix timestamp)
-	 * @param	string	$changeFrequency	Change frequency (hourly,daily,weekly,monthly,yearly)
+	 * @param	string	$title	Title of the entry
+	 * @param	int	$lastModification	News publication time (Unix timestamp)
+	 * @param	string	$changeFrequency	Unused for news
 	 * @param	string	$keywords	Keywords for this entry
 	 * @return	string	Generated entry content
+	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	abstract public function renderEntry($url, $lastModification = 0, $changeFrequency = '', $keywords = '');
+	abstract public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '');
 
 	/**
 	 * Creates end XML tags for this sitemap.

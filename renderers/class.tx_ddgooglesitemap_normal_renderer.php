@@ -61,16 +61,17 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 	}
 
 	/**
-	 * Renders a single entry as a nomal sitemap entry.
+	 * Renders a single entry as a normal sitemap entry.
 	 *
-	 * @param string	$url	URL of the entry
-	 * @param int	$lastModification	Last modification time (as unix timestamp)
-	 * @param string	$changeFrequency	Change frequency (hourly,daily,weekly,monthly,yearly)
-	 * @param string	$keywords	Keywords for this entry
+	 * @param	string	$url	URL of the entry
+	 * @param	string	$title	Title of the entry
+	 * @param	int	$lastModification	News publication time (Unix timestamp)
+	 * @param	string	$changeFrequency	Unused for news
+	 * @param	string	$keywords	Keywords for this entry
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	public function renderEntry($url, $lastModification = 0, $changeFrequency = '', $keywords = '') {
+	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '') {
 		$content = '<url>';
 		$content .= '<loc>' . $url . '</loc>';
 		if ($lastModification) {

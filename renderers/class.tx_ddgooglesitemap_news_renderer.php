@@ -63,21 +63,27 @@ class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_rende
 	}
 
 	/**
-	 * Renders a single entry as a nomal sitemap entry.
+	 * Renders a single entry as a news entry.
 	 *
 	 * @param	string	$url	URL of the entry
+	 * @param	string	$title	Title of the entry
 	 * @param	int	$lastModification	News publication time (Unix timestamp)
 	 * @param	string	$changeFrequency	Unused for news
 	 * @param	string	$keywords	Keywords for this entry
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	public function renderEntry($url, $lastModification = 0, $changeFrequency = '', $keywords = '') {
+	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '') {
 		$content = '<url>';
 		$content .= '<loc>' . $url . '</loc>';
 		// News must have a publication date, so we put this unconditionally!
 		$content .= '<news:news>';
+		$content .= '<news:publication>';
+		$content .= '<news:name>' . htmlspecialchars($GLOBALS['TSFE']->tmpl->setup['sitetitle']) . '</news:name>';
+		$content .= '<news:language>' . htmlspecialchars($GLOBALS['TSFE']->lang) . '</news:language>';
+		$content .= '</news:publication>';
 		$content .= '<news:publication_date>' . date('c', $lastModification) . '</news:publication_date>';
+		$content .= '<news:title>' . htmlspecialchars($title) . '</news:title>';
 		if ($keywords) {
 			$content .= '<news:keywords>' . htmlspecialchars($keywords) . '</news:keywords>';
 		}
