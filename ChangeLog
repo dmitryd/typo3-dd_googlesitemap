@@ -3,6 +3,7 @@
 	* Fixed: deprecated calls
 	* Fixed bug #4157: Annoying logging of changes to tx_ddgooglesitemap_lastmod
 	* Fixed bug #3033: News sitemap: respect Google requirements
+	* Fixed bug #3716: pages below a shortcut page aren't rendered
 
 2010-01-09  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
