@@ -1,6 +1,7 @@
 2010-01-09  Dmitry Dulepov  <dmitry.dulepov+typo3svn@gmail.com>
 
 	* Fixed: deprecated calls
+	* Fixed bug #4157: Annoying logging of changes to tx_ddgooglesitemap_lastmod
 
 2010-01-09  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

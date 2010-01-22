@@ -101,6 +101,7 @@ class tx_ddgooglesitemap_tcemain {
 				$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 				/* @var $tce t3lib_TCEmain */
 				$tce->start($datamap, null);
+				$tce->enableLogging = false;
 				$tce->process_datamap();
 			}
 		}
