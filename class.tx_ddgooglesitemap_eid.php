@@ -122,7 +122,7 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	protected function initTSFE() {
-		if (version_compare(TYPO3_version, '4.3', '<')) {
+		if (version_compare(TYPO3_version, '4.3.0', '<')) {
 			$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
 			$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
 		}
