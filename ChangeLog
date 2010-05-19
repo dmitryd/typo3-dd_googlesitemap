@@ -3,6 +3,7 @@
 	* Fixed bug #6689: do not limit normal tt_news sitemap to two days
 	* Fixed bug #6548: News sitemap lacks content of <news:title> tag
 	* Fixed bug #6567: News sitemap: publication name is not configurable
+	* Fixed bug #4023: Missing doktype property of the first page in the pageList array
 
 2010-01-09  Dmitry Dulepov  <dmitry.dulepov+typo3svn@gmail.com>
 

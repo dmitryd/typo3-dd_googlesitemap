@@ -74,6 +74,7 @@ class tx_ddgooglesitemap_pages {
 				'uid' => $GLOBALS['TSFE']->id,
 				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
+				'doktype' => $GLOBALS['TSFE']->page['doktype']
 			);
 		}
 		else {
@@ -82,6 +83,7 @@ class tx_ddgooglesitemap_pages {
 				'uid' => $page['uid'],
 				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
+				'doktype' => $page['doktype']
 			);
 		}
 
