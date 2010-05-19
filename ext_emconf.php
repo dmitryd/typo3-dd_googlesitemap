@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext "dd_googlesitemap".
 #
-# Auto generated 22-01-2010 13:12
+# Auto generated 19-05-2010 12:39
 #
 # Manual updates:
 # Only the data in the array - everything else is removed by next
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => 'SIA "ACCIO"',
-	'version' => '1.0.4',
+	'version' => '1.0.5',
 	'constraints' => array(
 		'depends' => array(
 		),
@@ -38,7 +38,7 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:14:{s:9:"ChangeLog";s:4:"46d3";s:32:"class.tx_ddgooglesitemap_eid.php";s:4:"5333";s:34:"class.tx_ddgooglesitemap_pages.php";s:4:"02ef";s:36:"class.tx_ddgooglesitemap_tcemain.php";s:4:"3528";s:35:"class.tx_ddgooglesitemap_ttnews.php";s:4:"0b2d";s:12:"ext_icon.gif";s:4:"0709";s:17:"ext_localconf.php";s:4:"9e3e";s:14:"ext_tables.php";s:4:"397e";s:14:"ext_tables.sql";s:4:"024e";s:24:"ext_typoscript_setup.txt";s:4:"71ba";s:14:"doc/manual.sxw";s:4:"8c8d";s:56:"renderers/class.tx_ddgooglesitemap_abstract_renderer.php";s:4:"0dc9";s:52:"renderers/class.tx_ddgooglesitemap_news_renderer.php";s:4:"9f11";s:54:"renderers/class.tx_ddgooglesitemap_normal_renderer.php";s:4:"c6ac";}',
+	'_md5_values_when_last_written' => 'a:14:{s:9:"ChangeLog";s:4:"55e8";s:32:"class.tx_ddgooglesitemap_eid.php";s:4:"5333";s:34:"class.tx_ddgooglesitemap_pages.php";s:4:"9181";s:36:"class.tx_ddgooglesitemap_tcemain.php";s:4:"3528";s:35:"class.tx_ddgooglesitemap_ttnews.php";s:4:"c22e";s:12:"ext_icon.gif";s:4:"0709";s:17:"ext_localconf.php";s:4:"9e3e";s:14:"ext_tables.php";s:4:"397e";s:14:"ext_tables.sql";s:4:"024e";s:24:"ext_typoscript_setup.txt";s:4:"71ba";s:14:"doc/manual.sxw";s:4:"da82";s:56:"renderers/class.tx_ddgooglesitemap_abstract_renderer.php";s:4:"0dc9";s:52:"renderers/class.tx_ddgooglesitemap_news_renderer.php";s:4:"ea3b";s:54:"renderers/class.tx_ddgooglesitemap_normal_renderer.php";s:4:"c6ac";}',
 	'suggests' => array(
 	),
 );
