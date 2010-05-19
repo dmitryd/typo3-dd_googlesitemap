@@ -120,7 +120,7 @@ class tx_ddgooglesitemap_ttnews {
 
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,datetime,keywords',
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
