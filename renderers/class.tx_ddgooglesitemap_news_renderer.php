@@ -40,6 +40,28 @@ require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgoo
 class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_renderer {
 
 	/**
+	 * Contains google news site name
+	 *
+	 * @var string
+	 */
+	protected $sitename;
+
+	/**
+	 * Creates an instance of this class
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		if ($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['google_news_site_name']) {
+			$this->sitename = $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['google_news_site_name'];
+		}
+		else {
+			$this->sitename = $GLOBALS['TSFE']->tmpl->setup['sitetitle'];
+		}
+		$this->sitename = htmlspecialchars($this->sitename);
+	}
+
+	/**
 	 * Creates end tags for this sitemap.
 	 *
 	 * @return string	End XML tags
@@ -79,7 +101,7 @@ class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_rende
 		// News must have a publication date, so we put this unconditionally!
 		$content .= '<news:news>';
 		$content .= '<news:publication>';
-		$content .= '<news:name>' . htmlspecialchars($GLOBALS['TSFE']->tmpl->setup['sitetitle']) . '</news:name>';
+		$content .= '<news:name>' . $this->sitename . '</news:name>';
 		$content .= '<news:language>' . htmlspecialchars($GLOBALS['TSFE']->lang) . '</news:language>';
 		$content .= '</news:publication>';
 		$content .= '<news:publication_date>' . date('c', $lastModification) . '</news:publication_date>';
