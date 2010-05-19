@@ -68,6 +68,13 @@ class tx_ddgooglesitemap_ttnews {
 	protected $cObj;
 
 	/**
+	 * Indicates sitemap type
+	 *
+	 * @var boolean
+	 */
+	protected $isNewsSitemap;
+
+	/**
 	 * Single view page
 	 *
 	 * @var	int
@@ -96,7 +103,8 @@ class tx_ddgooglesitemap_ttnews {
 		$this->cObj->start(array());
 
 		// Determine renderer type for news
-		$rendererClass = (t3lib_div::_GET('type') === 'news' ?
+		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
+		$rendererClass = ($this->isNewsSitemap ?
 			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
 		$this->renderer = t3lib_div::makeInstance($rendererClass);
 	}
@@ -113,8 +121,8 @@ class tx_ddgooglesitemap_ttnews {
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,datetime,keywords',
-				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ') AND ' .
-				'crdate>=' . (time() - 48*60*60) .
+				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
+				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
 			);
 			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
