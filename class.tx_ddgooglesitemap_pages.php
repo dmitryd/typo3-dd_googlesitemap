@@ -134,7 +134,7 @@ class tx_ddgooglesitemap_pages {
 	/**
 	 * Outputs information about single page
 	 *
-	 * @param	array	$pageInfo	Page information (needs 'uid' and 'SYS_LASTCHANGED' columns
+	 * @param	array	$pageInfo	Page information (needs 'uid' and 'SYS_LASTCHANGED' columns)
 	 * @return	void
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
