@@ -1,6 +1,7 @@
 2012-02-20  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed bug #34123: Rewrite rule does not work when realurl is enabled
+	* Released version 1.0.6
 
 2010-05-19  Dmitry Dulepov  <dmitry.dulepov+typo3svn@gmail.com>
 
