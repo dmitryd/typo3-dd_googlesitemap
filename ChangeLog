@@ -1,3 +1,7 @@
+2012-02-20  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fixed bug #34123: Rewrite rule does not work when realurl is enabled
+
 2010-05-19  Dmitry Dulepov  <dmitry.dulepov+typo3svn@gmail.com>
 
 	* Fixed bug #6689: do not limit normal tt_news sitemap to two days
