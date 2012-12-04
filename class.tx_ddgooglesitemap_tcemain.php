@@ -100,8 +100,8 @@ class tx_ddgooglesitemap_tcemain {
 				);
 				$tce = t3lib_div::makeInstance('t3lib_TCEmain');
 				/* @var $tce t3lib_TCEmain */
-				$tce->start($datamap, null);
-				$tce->enableLogging = false;
+				$tce->start($datamap, NULL);
+				$tce->enableLogging = FALSE;
 				$tce->process_datamap();
 			}
 		}
@@ -117,11 +117,11 @@ class tx_ddgooglesitemap_tcemain {
 	 * @return	void
 	 */
 	protected function getPid($table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
-		if (!t3lib_div::testInt($id)) {
+		if (!self::testInt($id)) {
 			$id = $pObj->substNEWwithIDs[$id];
 		}
 		if ($table !== 'pages') {
-			if (isset($fieldArray['pid']) && t3lib_div::testInt($fieldArray['pid']) && $fieldArray['pid'] >= 0) {
+			if (isset($fieldArray['pid']) && self::testInt($fieldArray['pid']) && $fieldArray['pid'] >= 0) {
 				$id = $fieldArray['pid'];
 			}
 			else {
@@ -130,6 +130,22 @@ class tx_ddgooglesitemap_tcemain {
 			}
 		}
 		return $id;
+	}
+
+	/**
+	 * Provides a portable testInt implementation acorss TYPO3 branches.
+	 *
+	 * @param mixed $value
+	 * @return bool
+	 */
+	static protected function testInt($value) {
+		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
+			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
+		}
+		if (class_exists('t3lib_utility_Math')) {
+			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
+		}
+		return t3lib_div::testInt($value);
 	}
 }
 
