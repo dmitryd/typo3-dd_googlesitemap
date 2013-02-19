@@ -17,7 +17,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Dmitry Dulepov',
 	'author_email' => 'dmitry.dulepov@gmail.com',
 	'shy' => '',
-	'dependencies' => 'TYPO3',
+	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
@@ -32,7 +32,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'version' => '1.0.7',
 	'constraints' => array(
 		'depends' => array(
-			'TYPO3' => '4.5.0-6.0.99',
+			'typo3' => '4.5.0-6.0.99',
 		),
 		'conflicts' => array(
 		),
