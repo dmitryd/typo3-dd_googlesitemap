@@ -56,10 +56,11 @@ abstract class tx_ddgooglesitemap_abstract_renderer {
 	 * @param	int	$lastModification	News publication time (Unix timestamp)
 	 * @param	string	$changeFrequency	Unused for news
 	 * @param	string	$keywords	Keywords for this entry
+	 * @param	mixed	$priority	Priority (numeric, 1-10, if passed)
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	abstract public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '');
+	abstract public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '');
 
 	/**
 	 * Creates end XML tags for this sitemap.

@@ -68,10 +68,11 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 	 * @param	int	$lastModification	News publication time (Unix timestamp)
 	 * @param	string	$changeFrequency	Unused for news
 	 * @param	string	$keywords	Keywords for this entry
+	 * @param	mixed	$priority	Priority (numeric, 1-10, if passed)
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '') {
+	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '') {
 		$content = '<url>';
 		$content .= '<loc>' . $url . '</loc>';
 		if ($lastModification) {
@@ -79,6 +80,9 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 		}
 		if ($changeFrequency) {
 			$content .= '<changefreq>' . $changeFrequency . '</changefreq>';
+		}
+		if ($priority != '') {
+			$content .= '<priority>' . sprintf('%0.1f', $priority/10) . '</priority>';
 		}
 		$content .= '</url>';
 

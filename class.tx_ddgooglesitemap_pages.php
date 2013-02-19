@@ -95,6 +95,7 @@ class tx_ddgooglesitemap_pages {
 				'uid' => $GLOBALS['TSFE']->id,
 				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
+				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
 				'doktype' => $GLOBALS['TSFE']->page['doktype']
 			);
 		}
@@ -104,6 +105,7 @@ class tx_ddgooglesitemap_pages {
 				'uid' => $page['uid'],
 				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
+				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
 				'doktype' => $page['doktype']
 			);
 		}
@@ -163,7 +165,7 @@ class tx_ddgooglesitemap_pages {
 			//
 			// Notice: no sorting (for speed)!
 			$this->pageList += $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod',
+					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
 					'', '', false);
 		}
 	}
@@ -188,7 +190,7 @@ class tx_ddgooglesitemap_pages {
 				($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url, $pageinfo['title'],
 				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
-				$this->getChangeFrequency($pageInfo));
+				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority']);
 		}
 	}
 

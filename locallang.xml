@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'dd_googlesitemap'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="pages.tx_ddgooglesitemap_priority">Sitemap priority:</label>
+			<label index="pages.tx_ddgooglesitemap_priority.0">0.0 (lowest)</label>
+			<label index="pages.tx_ddgooglesitemap_priority.1">0.1</label>
+			<label index="pages.tx_ddgooglesitemap_priority.2">0.2</label>
+			<label index="pages.tx_ddgooglesitemap_priority.3">0.3</label>
+			<label index="pages.tx_ddgooglesitemap_priority.4">0.4</label>
+			<label index="pages.tx_ddgooglesitemap_priority.5">0.5 (standard)</label>
+			<label index="pages.tx_ddgooglesitemap_priority.6">0.6</label>
+			<label index="pages.tx_ddgooglesitemap_priority.7">0.7</label>
+			<label index="pages.tx_ddgooglesitemap_priority.8">0.8</label>
+			<label index="pages.tx_ddgooglesitemap_priority.9">0.9</label>
+			<label index="pages.tx_ddgooglesitemap_priority.10">1.0 (highest)</label>
+		</languageKey>
+	</data>
+</T3locallang>
