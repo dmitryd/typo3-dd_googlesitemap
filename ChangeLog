@@ -2,6 +2,7 @@
 
 	* Add limit & offset URL parameters to allow multiple sitemaps
 	* Fixed issue #3063: add multilanguage tt_news support
+	* Fixed issue #4025: include pages from sysfolders into the sitemap (thanks to Stefan Galinski)
 
 2012-12-04  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

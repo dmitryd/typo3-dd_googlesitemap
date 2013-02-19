@@ -143,6 +143,13 @@ class tx_ddgooglesitemap_pages {
 	 * @return	void
 	 */
 	protected function generateSitemapForPages() {
+		// Workaround: we want the sysfolders back into the menu list!
+		$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
+			'pages.doktype<200',
+			'pages.doktype<>255',
+			$GLOBALS['TSFE']->sys_page->where_hid_del
+		);
+
 		while (!empty($this->pageList) && $this->generatedItemCount - $this->offset <= $this->limit) {
 			$pageInfo = array_shift($this->pageList);
 			if ($this->generatedItemCount >= $this->offset) {
