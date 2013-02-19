@@ -114,7 +114,7 @@ class tx_ddgooglesitemap_tcemain {
 	 * @param	int	$id	ID of the record
 	 * @param	array	$fieldArray	Field array
 	 * @param	t3lib_TCEmain	$pObj	Reference to TCEmain
-	 * @return	void
+	 * @return	int
 	 */
 	protected function getPid($table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
 		if (!self::testInt($id)) {
