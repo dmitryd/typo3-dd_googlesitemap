@@ -68,6 +68,20 @@ class tx_ddgooglesitemap_ttnews {
 	protected $cObj;
 
 	/**
+	 * Maximum number of items to show.
+	 *
+	 * @var int
+	 */
+	protected $limit;
+
+	/**
+	 * Offset to start outputting from.
+	 *
+	 * @var int
+	 */
+	protected $offset;
+
+	/**
 	 * Indicates sitemap type
 	 *
 	 * @var boolean
@@ -107,6 +121,12 @@ class tx_ddgooglesitemap_ttnews {
 		$rendererClass = ($this->isNewsSitemap ?
 			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
 		$this->renderer = t3lib_div::makeInstance($rendererClass);
+
+		$this->offset = max(0, intval(t3lib_div::_GET('offset')));
+		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
+		if ($this->limit <= 0) {
+			$this->limit = 50000;
+		}
 	}
 
 	/**
@@ -123,7 +143,8 @@ class tx_ddgooglesitemap_ttnews {
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
-				$this->cObj->enableFields('tt_news'), '', 'datetime DESC'
+				$this->cObj->enableFields('tt_news'), '', 'datetime DESC',
+				$this->offset . ',' . $this->limit
 			);
 			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {

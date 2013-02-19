@@ -55,6 +55,27 @@ class tx_ddgooglesitemap_pages {
 	protected $cObj;
 
 	/**
+	 * Number of generated items.
+	 *
+	 * @var int
+	 */
+	protected $generatedItemCount = 0;
+
+	/**
+	 * Maximum number of items to show.
+	 *
+	 * @var int
+	 */
+	protected $limit;
+
+	/**
+	 * Offset to start outputting from.
+	 *
+	 * @var int
+	 */
+	protected $offset;
+
+	/**
 	 * A sitemap rendere
 	 *
 	 * @var	tx_ddgooglesitemap_normal_renderer
@@ -91,6 +112,12 @@ class tx_ddgooglesitemap_pages {
 		$this->cObj->start(array());
 
 		$this->renderer = t3lib_div::makeInstance('tx_ddgooglesitemap_normal_renderer');
+
+		$this->offset = max(0, intval(t3lib_div::_GET('offset')));
+		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
+		if ($this->limit <= 0) {
+			$this->limit = 50000;
+		}
 	}
 
 	/**
@@ -116,9 +143,12 @@ class tx_ddgooglesitemap_pages {
 	 * @return	void
 	 */
 	protected function generateSitemapForPages() {
-		while (count($this->pageList) > 0) {
+		while (!empty($this->pageList) && $this->generatedItemCount - $this->offset <= $this->limit) {
 			$pageInfo = array_shift($this->pageList);
-			$this->writeSingleUrl($pageInfo);
+			if ($this->generatedItemCount >= $this->offset) {
+				$this->writeSingleUrl($pageInfo);
+			}
+			$this->generatedItemCount++;
 
 			// Add subpages of this page to the end of the page list. This way
 			// we get top level pages in the sitemap first, then subpages of the
