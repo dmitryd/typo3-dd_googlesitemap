@@ -140,9 +140,17 @@ class tx_ddgooglesitemap_ttnews {
 
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
+
+			$languageCondition = '';
+			$language = t3lib_div::_GP('L');
+			if (self::testInt($language)) {
+				$languageCondition = ' AND sys_language_uid=' . $language;
+			}
+
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
+				$languageCondition .
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC',
 				$this->offset . ',' . $this->limit
 			);
@@ -233,6 +241,22 @@ class tx_ddgooglesitemap_ttnews {
 			}
 		}
 		return $result;
+	}
+
+	/**
+	 * Provides a portable testInt implementation acorss TYPO3 branches.
+	 *
+	 * @param mixed $value
+	 * @return bool
+	 */
+	static protected function testInt($value) {
+		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
+			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
+		}
+		if (class_exists('t3lib_utility_Math')) {
+			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
+		}
+		return t3lib_div::testInt($value);
 	}
 }
 
