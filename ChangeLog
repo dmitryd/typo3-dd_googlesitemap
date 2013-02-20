@@ -1,3 +1,7 @@
+2013-02-20  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fixed #1: Hooking into the list of pages (thanks to Xavier Perseguers)
+
 2013-02-19  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Add limit & offset URL parameters to allow multiple sitemaps

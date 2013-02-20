@@ -83,6 +83,13 @@ class tx_ddgooglesitemap_pages {
 	protected $renderer;
 
 	/**
+	 * Hook objects for post-processing
+	 *
+	 * @var	array
+	 */
+	protected $hookObjects;
+
+	/**
 	 * Initializes the instance of this class. This constructir sets starting
 	 * point for the sitemap to the current page id
 	 *
@@ -119,6 +126,14 @@ class tx_ddgooglesitemap_pages {
 		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
 		if ($this->limit <= 0) {
 			$this->limit = 50000;
+		}
+
+		// Prepare user defined objects (if any)
+		$this->hookObjects = array();
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['generateSitemapForPagesClass'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['generateSitemapForPagesClass'] as $classRef) {
+				$this->hookObjects[] = t3lib_div::getUserObj($classRef);
+			}
 		}
 	}
 
@@ -191,6 +206,22 @@ class tx_ddgooglesitemap_pages {
 			echo $this->renderer->renderEntry($url, $pageInfo['title'],
 				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
 				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority']);
+
+			// Post-process current page and possibly append data
+			// @see http://forge.typo3.org/issues/45637
+			foreach ($this->hookObjects as $hookObject) {
+				if (is_callable(array($hookObject, 'postProcessPageInfo'))) {
+					$parameters = array(
+						'pageInfo' => &$pageInfo,
+						'generatedItemCount' => &$this->generatedItemCount,
+						'offset' => $this->offset,
+						'limit' => $this->limit,
+						'renderer' => $this->renderer,
+						'pObj' => $this
+					);
+					$hookObject->postProcessPageInfo($parameters);
+				}
+			}
 		}
 	}
 
