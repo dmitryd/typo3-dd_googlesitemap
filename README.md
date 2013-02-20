@@ -11,7 +11,7 @@ Make sure to read the manual in the doc/ directory before asking questions or wr
 
 What it does not do?
 --------------------
-Many things. It is deliberately not a "all-purpose solution". It is created to be fast and efficient. It only contains sitemaps for pages and tt_news and there are no plans to change that or do any sophisticated filtering, etc.
+Many things. It is deliberately not a "all-purpose solution". It is created to be fast and efficient. It only contains sitemaps for pages and tt_news and there are no plans to change that or do any sophisticated filtering, etc. You still can ask though :)
 
 Repository
 ----------
