@@ -1,6 +1,7 @@
 2013-02-20  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed #1: Hooking into the list of pages (thanks to Xavier Perseguers)
+	* Fixed forge issue #9453: Not all pages get into the sitemap
 
 2013-02-19  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

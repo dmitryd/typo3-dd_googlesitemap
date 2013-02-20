@@ -179,9 +179,11 @@ class tx_ddgooglesitemap_pages {
 			// first, second, etc pages of the top level pages and so on.
 			//
 			// Notice: no sorting (for speed)!
-			$this->pageList += $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
+			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
 					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
 					'', '', false);
+			$this->pageList = array_merge($this->pageList, array_values($morePages));
+			unset($morePages);
 		}
 	}
 
