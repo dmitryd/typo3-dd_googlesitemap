@@ -1,3 +1,7 @@
+2013-03-05  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Snowflake task 2697.65: add an index to sitemaps
+
 2013-02-20  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed #1: Hooking into the list of pages (thanks to Xavier Perseguers)
