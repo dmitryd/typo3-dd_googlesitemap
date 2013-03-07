@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext "dd_googlesitemap".
 #
-# Auto generated 07-03-2013 09:06
+# Auto generated 07-03-2013 14:24
 #
 # Manual updates:
 # Only the data in the array - everything else is removed by next
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => 'SIA "ACCIO"',
-	'version' => '1.0.8',
+	'version' => '1.1.0',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '4.5.0-6.0.99',
