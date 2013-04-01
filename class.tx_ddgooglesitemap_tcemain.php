@@ -49,6 +49,9 @@ class tx_ddgooglesitemap_tcemain {
 	 */
 	const MAX_ENTRIES = 5;
 
+	/** @var int[] */
+	static protected $recordedPages = array();
+
 	/**
 	 * Hooks to data change procedure to watch modified data. This hook is called
 	 * after data is written to the database, so all paths are modified paths.
@@ -78,7 +81,9 @@ class tx_ddgooglesitemap_tcemain {
 	 * @return	void
 	 */
 	protected function recordPageChange($table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
-		if (($pid = $this->getPid($table, $id, $fieldArray, $pObj))) {
+		if (($pid = $this->getPid($table, $id, $fieldArray, $pObj)) && !isset(self::$recordedPages[$pid])) {
+			self::$recordedPages[$pid] = 1;
+
 			$record = t3lib_BEfunc::getRecord('pages', $pid, 'tx_ddgooglesitemap_lastmod');
 			$elements = $record['tx_ddgooglesitemap_lastmod'] == '' ? array() : t3lib_div::trimExplode(',', $record['tx_ddgooglesitemap_lastmod']);
 			$time = time();

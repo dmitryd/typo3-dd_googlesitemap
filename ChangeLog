@@ -1,3 +1,7 @@
+2013-03-26  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Reduce number of update calls to prevent to many updates of the same page in a single request (for example, during copying of pages)
+
 2013-03-07  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Released version 1.0.8
