@@ -148,12 +148,15 @@ class tx_ddgooglesitemap_tcemain {
 			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		}
 		if (class_exists('t3lib_utility_Math')) {
+			/** @noinspection PhpDeprecationInspection */
 			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
 		}
+		/** @noinspection PhpDeprecationInspection PhpUndefinedMethodInspection */
 		return t3lib_div::testInt($value);
 	}
 }
 
+/** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']);
 }

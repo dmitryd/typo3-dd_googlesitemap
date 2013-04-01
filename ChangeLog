@@ -1,3 +1,7 @@
+2013-04-01  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Add inspection comments to lower the amount of warnings in PhpStorm
+
 2013-03-26  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Reduce number of update calls to prevent to many updates of the same page in a single request (for example, during copying of pages)
