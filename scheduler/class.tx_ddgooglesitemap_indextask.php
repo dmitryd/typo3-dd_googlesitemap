@@ -84,25 +84,29 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 * @return boolean    Returns true on successful execution, false on error
 	 */
 	public function execute() {
-
 		$indexFilePathTemp = PATH_site . $this->indexFilePath . '.tmp';
 		$indexFile = fopen($indexFilePathTemp, 'at');
 		fwrite($indexFile, '<?xml version="1.0" encoding="UTF-8"?>' . chr(10));
 		fwrite($indexFile, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10));
 
-		$this->offset = 0;
-		$currentFileNumber = 1;
-		do {
-			$sitemapFileName = sprintf($this->sitemapFileFormat, $currentFileNumber++);
-			$this->buildSitemap($sitemapFileName);
-			$isSitemapEmpty = $this->isSitemapEmpty($sitemapFileName);
-			if ($isSitemapEmpty) {
-				@unlink(PATH_site . $sitemapFileName);
-			}
-			else {
-				fwrite($indexFile, '<sitemap><loc>' . htmlspecialchars($this->makeSitemapUrl($sitemapFileName)) . '</loc></sitemap>' . chr(10));
-			}
-		} while (!$isSitemapEmpty);
+		$eIDscripts = t3lib_div::trimExplode(chr(10), $this->eIdScriptUrl);
+		$eIdIndex = 1;
+		foreach ($eIDscripts as $eIdScriptUrl) {
+			$this->offset = 0;
+			$currentFileNumber = 1;
+			do {
+				$sitemapFileName = sprintf($this->sitemapFileFormat, $eIdIndex, $currentFileNumber++);
+				$this->buildSitemap($eIdScriptUrl, $sitemapFileName);
+				$isSitemapEmpty = $this->isSitemapEmpty($sitemapFileName);
+				if ($isSitemapEmpty) {
+					@unlink(PATH_site . $sitemapFileName);
+				}
+				else {
+					fwrite($indexFile, '<sitemap><loc>' . htmlspecialchars($this->makeSitemapUrl($sitemapFileName)) . '</loc></sitemap>' . chr(10));
+				}
+			} while (!$isSitemapEmpty);
+			$eIdIndex++;
+		}
 
 		fwrite($indexFile, '</sitemapindex>' . chr(10));
 		fclose($indexFile);
@@ -123,7 +127,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 */
 	public function getAdditionalInformation() {
 		$format = $GLOBALS['LANG']->sL('LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.extra_info');
-		return sprintf($format, $this->getEIdScriptUrl(), $this->getIndexFileUrl());
+		return sprintf($format, $this->getIndexFileUrl());
 	}
 
 	/**
@@ -197,8 +201,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 *
 	 * @return void
 	 */
-	protected function buildBaseUrl()
-	{
+	protected function buildBaseUrl() {
 		$urlParts = parse_url($this->eIdScriptUrl);
 		$this->baseUrl = $urlParts['scheme'] . '://';
 		if ($urlParts['user']) {
@@ -218,11 +221,12 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	/**
 	 * Builds the sitemap.
 	 *
+	 * @param string $eIdScriptUrl
 	 * @param string $sitemapFileName
 	 * @see tx_ddgooglesitemap_additionalfieldsprovider
 	 */
-	protected function buildSitemap($sitemapFileName) {
-		$url = $this->eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
+	protected function buildSitemap($eIdScriptUrl, $sitemapFileName) {
+		$url = $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
 
 		$content = t3lib_div::getURL($url);
 		if ($content) {
@@ -236,10 +240,9 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 *
 	 * @return void
 	 */
-	protected function buildSitemapFileFormat()
-	{
+	protected function buildSitemapFileFormat() {
 		$fileParts = pathinfo($this->indexFilePath);
-		$this->sitemapFileFormat = $fileParts['dirname'] . '/' . $fileParts['filename'] . '_sitemap_%05d.xml';
+		$this->sitemapFileFormat = $fileParts['dirname'] . '/' . $fileParts['filename'] . '_sitemap_%05d_%05d.xml';
 	}
 
 	/**

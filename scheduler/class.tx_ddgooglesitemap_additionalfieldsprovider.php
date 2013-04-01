@@ -55,7 +55,7 @@ class tx_ddgooglesitemap_additionalfieldsprovider implements tx_scheduler_Additi
 		$maxUrlsPerSitemap = $task->getMaxUrlsPerSitemap();
 
 		$additionalFields['eIdUrl'] = array(
-			'code'     => '<input class="wide" type="text" name="tx_scheduler[eIdUrl]" value="' . htmlspecialchars($url) . '" />',
+			'code'     => '<textarea style="width:350px;height:200px" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.eIDFieldLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
@@ -157,23 +157,24 @@ class tx_ddgooglesitemap_additionalfieldsprovider implements tx_scheduler_Additi
 	 * @param array $errors
 	 */
 	protected function validateEIdUrl(array &$submittedData, array &$errors) {
-		$url = $submittedData['eIdUrl'];
-		if (FALSE !== ($urlParts = parse_url($url))) {
-			if (!$urlParts['host']) {
-				$errors[] = 'scheduler.error.missingHost';
-			} else {
-				list($count) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT(*) AS counter', 'sys_domain',
-						'domainName=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($urlParts['host'], 'sys_domain')
-				);
-				if ($count['counter'] == 0) {
+		foreach (t3lib_div::trimExplode(chr(10), $submittedData['eIdUrl']) as $url) {
+			if (FALSE !== ($urlParts = parse_url($url))) {
+				if (!$urlParts['host']) {
 					$errors[] = 'scheduler.error.missingHost';
+				} else {
+					list($count) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT(*) AS counter', 'sys_domain',
+							'domainName=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($urlParts['host'], 'sys_domain')
+					);
+					if ($count['counter'] == 0) {
+						$errors[] = 'scheduler.error.missingHost';
+					}
 				}
-			}
-			if (!preg_match('/(?:^|&)eID=dd_googlesitemap/', $urlParts['query'])) {
-				$errors[] = 'scheduler.error.badPath';
-			}
-			if (preg_match('/(?:^|&)(?:offset|limit)=/', $urlParts['query'])) {
-				$errors[] = 'scheduler.error.badParameters';
+				if (!preg_match('/(?:^|&)eID=dd_googlesitemap/', $urlParts['query'])) {
+					$errors[] = 'scheduler.error.badPath';
+				}
+				if (preg_match('/(?:^|&)(?:offset|limit)=/', $urlParts['query'])) {
+					$errors[] = 'scheduler.error.badParameters';
+				}
 			}
 		}
 	}

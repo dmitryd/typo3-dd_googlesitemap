@@ -20,7 +20,7 @@
 			<label index="pages.tx_ddgooglesitemap_priority.10">1.0 (highest)</label>
 			<label index="scheduler.title">Generate offline sitemap</label>
 			<label index="scheduler.description">Generates offline index file and sitemaps</label>
-			<label index="scheduler.eIDFieldLabel">eID parameters:</label>
+			<label index="scheduler.eIDFieldLabel">eID script URLs (one per line):</label>
 			<label index="scheduler.indexFieldLabel">Index file path:</label>
 			<label index="scheduler.maxUrlsPerSitemapLabel">URLs per sitemap:</label>
 			<label index="scheduler.error.missingHost">Host is missing or does not match any of TYPO3 hosts from the installation.</label>
@@ -28,7 +28,7 @@
 			<label index="scheduler.error.badParameters">'offset' and 'limit' parameters may not appear in the URL.</label>
 			<label index="scheduler.error.badIndexFilePath">Index file path must be relative to the site's main directory. The referenced directory must exist (the default directory is created when the extension is installed).</label>
 			<label index="scheduler.error.badNumberOfUrls">Number of URLs must be positive.</label>
-			<label index="scheduler.extra_info">Script: `%1$s`, index file: `%2$s`</label>
+			<label index="scheduler.extra_info">Index file: `%1$s`</label>
 		</languageKey>
 	</data>
 </T3locallang>
