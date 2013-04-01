@@ -23,14 +23,6 @@
 ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * $Id$
- */
-
-require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_normal_renderer.php'));
-
-/**
  * This class produces sitemap for pages
  *
  * @author	Dmitry Dulepov <dmitry@typo3.org>
@@ -38,7 +30,7 @@ require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgoo
  * @subpackage	tx_ddgooglesitemap
  */
 
-class tx_ddgooglesitemap_pages {
+class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 
 	/**
 	 * List of page uid values to generate entries for
@@ -48,13 +40,6 @@ class tx_ddgooglesitemap_pages {
 	protected $pageList = array();
 
 	/**
-	 * cObject to generate links
-	 *
-	 * @var	tslib_cObj
-	 */
-	protected $cObj;
-
-	/**
 	 * Number of generated items.
 	 *
 	 * @var int
@@ -62,21 +47,7 @@ class tx_ddgooglesitemap_pages {
 	protected $generatedItemCount = 0;
 
 	/**
-	 * Maximum number of items to show.
-	 *
-	 * @var int
-	 */
-	protected $limit;
-
-	/**
-	 * Offset to start outputting from.
-	 *
-	 * @var int
-	 */
-	protected $offset;
-
-	/**
-	 * A sitemap rendere
+	 * A sitemap renderer
 	 *
 	 * @var	tx_ddgooglesitemap_normal_renderer
 	 */
@@ -96,6 +67,8 @@ class tx_ddgooglesitemap_pages {
 	 * @return	void
 	 */
 	public function __construct() {
+		parent::__construct();
+
 		$pid = intval($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['forceStartPid']);
 		if ($pid === 0 || $pid == $GLOBALS['TSFE']->id) {
 			$this->pageList[$GLOBALS['TSFE']->id] = array(
@@ -117,16 +90,7 @@ class tx_ddgooglesitemap_pages {
 			);
 		}
 
-		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
-		$this->cObj->start(array());
-
 		$this->renderer = t3lib_div::makeInstance('tx_ddgooglesitemap_normal_renderer');
-
-		$this->offset = max(0, intval(t3lib_div::_GET('offset')));
-		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
-		if ($this->limit <= 0) {
-			$this->limit = 50000;
-		}
 
 		// Prepare user defined objects (if any)
 		$this->hookObjects = array();
@@ -138,28 +102,11 @@ class tx_ddgooglesitemap_pages {
 	}
 
 	/**
-	 * Outputs sitemap for pages.
-	 *
-	 * @return	void
-	 */
-	public function main() {
-		// Start
-		header('Content-type: text/xml');
-		echo $this->renderer->getStartTags();
-
-		// Generate URLs
-		$this->generateSitemapForPages();
-
-		// End
-		echo $this->renderer->getEndTags();
-	}
-
-	/**
 	 * Generates sitemap for pages (<url> entries in the sitemap)
 	 *
 	 * @return	void
 	 */
-	protected function generateSitemapForPages() {
+	protected function generateSitemapContent() {
 		// Workaround: we want the sysfolders back into the menu list!
 		$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
 			'pages.doktype<200',

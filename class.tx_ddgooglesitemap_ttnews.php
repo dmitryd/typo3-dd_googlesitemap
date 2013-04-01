@@ -22,14 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * $Id$
- */
-
-require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_normal_renderer.php'));
-require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_news_renderer.php'));
 
 /**
  * This class implements news sitemap
@@ -51,7 +43,7 @@ require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgoo
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_ttnews {
+class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 
 	/**
 	 * List of storage pages where news items are located
@@ -59,27 +51,6 @@ class tx_ddgooglesitemap_ttnews {
 	 * @var	array
 	 */
 	protected $pidList = array();
-
-	/**
-	 * cObject to generate links
-	 *
-	 * @var	tslib_cObj
-	 */
-	protected $cObj;
-
-	/**
-	 * Maximum number of items to show.
-	 *
-	 * @var int
-	 */
-	protected $limit;
-
-	/**
-	 * Offset to start outputting from.
-	 *
-	 * @var int
-	 */
-	protected $offset;
 
 	/**
 	 * Indicates sitemap type
@@ -96,37 +67,21 @@ class tx_ddgooglesitemap_ttnews {
 	protected $singlePid;
 
 	/**
-	 * A sitemap rendere
-	 *
-	 * @var	tx_ddgooglesitemap_abstract_renderer
-	 */
-	protected $renderer;
-
-	/**
 	 * Creates an instance of this class
 	 *
 	 * @return	void
 	 */
 	public function __construct() {
+		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
+		$this->rendererClass = ($this->isNewsSitemap ?
+			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
+
+		parent::__construct();
+
 		$singlePid = intval(t3lib_div::_GP('singlePid'));
 		$this->singlePid = $singlePid && $this->isInRootline($singlePid) ? $singlePid : $GLOBALS['TSFE']->id;
 
 		$this->validateAndcreatePageList();
-
-		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
-		$this->cObj->start(array());
-
-		// Determine renderer type for news
-		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
-		$rendererClass = ($this->isNewsSitemap ?
-			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
-		$this->renderer = t3lib_div::makeInstance($rendererClass);
-
-		$this->offset = max(0, intval(t3lib_div::_GET('offset')));
-		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
-		if ($this->limit <= 0) {
-			$this->limit = 50000;
-		}
 	}
 
 	/**
@@ -134,10 +89,7 @@ class tx_ddgooglesitemap_ttnews {
 	 *
 	 * @return	void
 	 */
-	public function main() {
-		header('Content-type: text/xml');
-		echo $this->renderer->getStartTags();
-
+	protected function generateSitemapContent() {
 		if (count($this->pidList) > 0) {
 			t3lib_div::loadTCA('tt_news');
 
@@ -172,8 +124,6 @@ class tx_ddgooglesitemap_ttnews {
 					'inside the rootline! -->';
 			}
 		}
-
-		echo $this->renderer->getEndTags();
 	}
 
 	/**

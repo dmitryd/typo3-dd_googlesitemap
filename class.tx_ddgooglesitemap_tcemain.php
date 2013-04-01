@@ -23,11 +23,6 @@
 ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- */
-
-
-/**
  * Page and content manipulation watch.
  *
  * @author	Dmitry Dulepov <dmitry@typo3.org>

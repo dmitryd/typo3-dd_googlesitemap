@@ -46,8 +46,7 @@ require_once(PATH_t3lib . 'class.t3lib_cs.php');
  */
 class tx_ddgooglesitemap_eid {
 
-	const	SITEMAP_TYPE_PAGES = 0;
-	const	SITEMAP_TYPE_NEWS = 1;
+	const DEFAILT_SITEMAP_TYPE = 'pages';
 
 	public function __construct() {
 		@set_time_limit(300);
@@ -60,60 +59,27 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	public function main() {
-		switch ($this->getSitemapType()) {
-			case self::SITEMAP_TYPE_PAGES:
-				$this->generatePagesSitemap();
-				break;
-			case self::SITEMAP_TYPE_NEWS:
-				$this->generateNewsSitemap();
-				break;
-			default:
-				$this->generateError();
+		$sitemapType = $this->getSitemapType();
+		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap'][$sitemapType])) {
+			$userFuncRef = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap'][$sitemapType];
+			$params = array();
+			t3lib_div::callUserFunction($userFuncRef, $params, $this);
 		}
-	}
-
-	/**
-	 * Sends error message.
-	 *
-	 * @return	void
-	 */
-	protected function generateError() {
-		header('400 Bad request');
-		echo 'The request cannot be understood.';
-	}
-
-	/**
-	 * Generates sitemap for pages
-	 *
-	 * @return	void
-	 */
-	protected function generatePagesSitemap() {
-		t3lib_div::requireOnce(t3lib_extMgm::extPath('dd_googlesitemap', 'class.tx_ddgooglesitemap_pages.php'));
-		$generator = t3lib_div::makeInstance('tx_ddgooglesitemap_pages');
-		/* @var $generator tx_ddgooglesitemap_pages */
-		$generator->main();
-	}
-
-	/**
-	 * Generates sitemap for news
-	 *
-	 * @return	void
-	 */
-	protected function generateNewsSitemap() {
-		t3lib_div::requireOnce(t3lib_extMgm::extPath('dd_googlesitemap', 'class.tx_ddgooglesitemap_ttnews.php'));
-		$generator = t3lib_div::makeInstance('tx_ddgooglesitemap_ttnews');
-		/* @var $generator tx_ddgooglesitemap_ttnews */
-		$generator->main();
+		else {
+			header('400 Bad request');
+			header('Content-type: text/plain');
+			echo 'No generator found for type \'' . $sitemapType . '\'';
+		}
 	}
 
 	/**
 	 * Determines what sitemap we should send
 	 *
-	 * @return	int	One of SITEMAP_TYPE_xxx constants
+	 * @return	string
 	 */
 	protected function getSitemapType() {
 		$type = t3lib_div::_GP('sitemap');
-		return ($type == 'news' ? self::SITEMAP_TYPE_NEWS : self::SITEMAP_TYPE_PAGES);
+		return ($type ?: self::DEFAILT_SITEMAP_TYPE);
 	}
 
 	/**
@@ -122,17 +88,16 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	protected function initTSFE() {
-		if (version_compare(TYPO3_version, '4.3.0', '<')) {
-			$tsfeClassName = t3lib_div::makeInstanceClassName('tslib_fe');
-			$GLOBALS['TSFE'] = new $tsfeClassName($GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-		}
-		else {
-			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-		}
+		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
 		$GLOBALS['TSFE']->connectToDB();
 		$GLOBALS['TSFE']->initFEuser();
 		$GLOBALS['TSFE']->determineId();
-		$GLOBALS['TSFE']->getCompressedTCarray();
+		if (version_compare(TYPO3_branch, '6.1', '>=')) {
+			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+		}
+		else {
+			$GLOBALS['TSFE']->getCompressedTCarray();
+		}
 		$GLOBALS['TSFE']->initTemplate();
 		$GLOBALS['TSFE']->getConfigArray();
 

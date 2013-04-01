@@ -23,13 +23,6 @@
 ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * $Id$
- */
-
-
-/**
  * This class contains an abstract renderer for sitemaps.
  *
  * NOTE: interface is internal and it is not stable. Any XCLASS is not guarantied

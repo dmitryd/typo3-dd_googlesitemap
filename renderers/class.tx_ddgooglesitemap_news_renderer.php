@@ -23,14 +23,6 @@
 ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * $Id$
- */
-
-require_once(t3lib_extMgm::extPath('dd_googlesitemap', 'renderers/class.tx_ddgooglesitemap_abstract_renderer.php'));
-
-/**
  * This class contains a renderer for the 'news' sitemap.
  *
  * @author	Dmitry Dulepov <dmitry@typo3.org>
