@@ -17,9 +17,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_ddgooglesite
 	'additionalFields' => 'tx_ddgooglesitemap_additionalfieldsprovider'
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap'] = array(
-	'pages' => 'tx_ddgooglesitemap_pages->main',
-	'news' => 'tx_ddgooglesitemap_ttnews->main'
-);
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['pages'] = 'tx_ddgooglesitemap_pages->main';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['news'] = 'tx_ddgooglesitemap_ttnews->main';
 
 ?>
