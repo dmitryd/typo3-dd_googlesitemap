@@ -85,7 +85,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 */
 	public function execute() {
 		$indexFilePathTemp = PATH_site . $this->indexFilePath . '.tmp';
-		$indexFile = fopen($indexFilePathTemp, 'at');
+		$indexFile = fopen($indexFilePathTemp, 'wt');
 		fwrite($indexFile, '<?xml version="1.0" encoding="UTF-8"?>' . chr(10));
 		fwrite($indexFile, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10));
 
