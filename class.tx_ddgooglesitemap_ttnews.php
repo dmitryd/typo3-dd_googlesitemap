@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2008 Dmitry Dulepov <dmitry@typo3.org>
+*  (c) 2007-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -39,7 +39,7 @@
  * If you need to show news on different single view pages, make several sitemaps
  * (it is possible with Google).
  *
- * @author	Dmitry Dulepov <dmitry@typo3.org>
+ * @author	Dmitry Dulepov <dmitry.dulepov@gmail.com>
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */

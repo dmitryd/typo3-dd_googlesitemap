@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Dmitry Dulepov <dmitry@typo3.org>
+*  (c) 2009-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -28,7 +28,7 @@
  * NOTE: interface is internal and it is not stable. Any XCLASS is not guarantied
  * to work!
  *
- * @author	Dmitry Dulepov <dmitry@typo3.org>
+ * @author	Dmitry Dulepov <dmitry.dulepov@gmail.com>
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
