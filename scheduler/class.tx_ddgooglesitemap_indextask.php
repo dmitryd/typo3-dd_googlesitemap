@@ -94,17 +94,23 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 		foreach ($eIDscripts as $eIdScriptUrl) {
 			$this->offset = 0;
 			$currentFileNumber = 1;
+			$lastFileHash = '';
 			do {
 				$sitemapFileName = sprintf($this->sitemapFileFormat, $eIdIndex, $currentFileNumber++);
 				$this->buildSitemap($eIdScriptUrl, $sitemapFileName);
+
 				$isSitemapEmpty = $this->isSitemapEmpty($sitemapFileName);
-				if ($isSitemapEmpty) {
+				$currentFileHash = md5_file(PATH_site . $sitemapFileName);
+				$stopLoop = $isSitemapEmpty || ($currentFileHash == $lastFileHash);
+
+				if ($stopLoop) {
 					@unlink(PATH_site . $sitemapFileName);
 				}
 				else {
 					fwrite($indexFile, '<sitemap><loc>' . htmlspecialchars($this->makeSitemapUrl($sitemapFileName)) . '</loc></sitemap>' . chr(10));
+					$lastFileHash = $currentFileHash;
 				}
-			} while (!$isSitemapEmpty);
+			} while (!$stopLoop);
 			$eIdIndex++;
 		}
 

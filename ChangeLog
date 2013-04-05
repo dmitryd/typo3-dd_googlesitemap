@@ -1,3 +1,7 @@
+2013-04-05  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fixed #3: endless - loop when a extension-specific type ignores offset and limit
+
 2013-04-01  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Add inspection comments to lower the amount of warnings in PhpStorm
