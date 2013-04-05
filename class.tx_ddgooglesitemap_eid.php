@@ -23,21 +23,6 @@
 ***************************************************************/
 
 /**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- * $Id$
- */
-
-require_once(PATH_tslib . 'class.tslib_pagegen.php');
-require_once(PATH_tslib . 'class.tslib_fe.php');
-require_once(PATH_t3lib . 'class.t3lib_page.php');
-require_once(PATH_tslib . 'class.tslib_content.php');
-require_once(PATH_t3lib . 'class.t3lib_userauth.php' );
-require_once(PATH_tslib . 'class.tslib_feuserauth.php');
-require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-require_once(PATH_t3lib . 'class.t3lib_cs.php');
-
-/**
  * This class implements a Google sitemap.
  *
  * @author	Dmitry Dulepov <dmitry@typo3.org>
