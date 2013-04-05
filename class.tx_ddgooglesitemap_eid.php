@@ -46,7 +46,7 @@ require_once(PATH_t3lib . 'class.t3lib_cs.php');
  */
 class tx_ddgooglesitemap_eid {
 
-	const DEFAILT_SITEMAP_TYPE = 'pages';
+	const DEFAULT_SITEMAP_TYPE = 'pages';
 
 	public function __construct() {
 		@set_time_limit(300);
@@ -79,7 +79,7 @@ class tx_ddgooglesitemap_eid {
 	 */
 	protected function getSitemapType() {
 		$type = t3lib_div::_GP('sitemap');
-		return ($type ?: self::DEFAILT_SITEMAP_TYPE);
+		return ($type ?: self::DEFAULT_SITEMAP_TYPE);
 	}
 
 	/**
