@@ -1,3 +1,7 @@
+2013-04-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Released version 1.2.0
+
 2013-04-05  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed #3: endless - loop when a extension-specific type ignores offset and limit
