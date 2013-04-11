@@ -67,6 +67,13 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	protected $singlePid;
 
 	/**
+	 * If true, try to get the single pid for a news item from its (first) category with fallback to $this->singlePid
+	 *
+	 * @var boolean
+	 */
+	protected $useCategorySinglePid;
+
+	/**
 	 * Creates an instance of this class
 	 *
 	 * @return	void
@@ -80,6 +87,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 
 		$singlePid = intval(t3lib_div::_GP('singlePid'));
 		$this->singlePid = $singlePid && $this->isInRootline($singlePid) ? $singlePid : $GLOBALS['TSFE']->id;
+		$this->useCategorySinglePid = (bool) t3lib_div::_GP('useCategorySinglePid');
 
 		$this->validateAndcreatePageList();
 	}
@@ -99,7 +107,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 				$languageCondition = ' AND sys_language_uid=' . $language;
 			}
 
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords',
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords,category',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
 				$languageCondition .
@@ -108,7 +116,11 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 			);
 			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				if (($url = $this->getNewsItemUrl($row['uid']))) {
+				$forceSinglePid = NULL;
+				if ($row['category'] && $this->useCategorySinglePid) {
+					$forceSinglePid = $this->getSinglePidFromCategory($row['uid']);
+				}
+				if (($url = $this->getNewsItemUrl($row['uid'], $forceSinglePid))) {
 					echo $this->renderer->renderEntry($url, $row['title'], $row['datetime'],
 						'', $row['keywords']);
 				}
@@ -127,14 +139,35 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	}
 
 	/**
+	 * @param int $newsId
+	 * @return int|null
+	 */
+	protected function getSinglePidFromCategory($newsId) {
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
+			'tt_news_cat.single_pid',
+			'tt_news',
+			'tt_news_cat_mm',
+			'tt_news_cat',
+			' AND tt_news_cat_mm.uid_local = ' . intval($newsId)
+		);
+		$categoryRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		if ($categoryRecord['single_pid']) {
+			return $categoryRecord['single_pid'];
+		} else {
+			return NULL;
+		}
+	}
+
+	/**
 	 * Creates a link to the news item
 	 *
 	 * @param	int	$newsId	News item uid
+	 * @param	int	$forceSinglePid Single View page for this news item
 	 * @return	string
 	 */
-	protected function getNewsItemUrl($newsId) {
+	protected function getNewsItemUrl($newsId, $forceSinglePid = NULL) {
 		$conf = array(
-			'parameter' => $this->singlePid,
+			'parameter' => is_null($forceSinglePid) ? $this->singlePid : $forceSinglePid,
 			'additionalParams' => '&tx_ttnews[tt_news]=' . $newsId,
 			'returnLast' => 'url',
 			'useCacheHash' => true,
