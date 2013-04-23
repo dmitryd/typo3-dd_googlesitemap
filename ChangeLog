@@ -1,3 +1,7 @@
+2013-04-23  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fixed #12: wrong path to the news renderer
+
 2013-04-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Released version 1.2.0
