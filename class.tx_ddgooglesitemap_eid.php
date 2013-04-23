@@ -51,7 +51,7 @@ class tx_ddgooglesitemap_eid {
 			t3lib_div::callUserFunction($userFuncRef, $params, $this);
 		}
 		else {
-			header('400 Bad request');
+			header('HTTP/1.0 400 Bad request', true, 400);
 			header('Content-type: text/plain');
 			echo 'No generator found for type \'' . $sitemapType . '\'';
 		}
