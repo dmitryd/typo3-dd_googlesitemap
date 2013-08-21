@@ -126,11 +126,33 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 			// first, second, etc pages of the top level pages and so on.
 			//
 			// Notice: no sorting (for speed)!
+			$GLOBALS['TSFE']->sys_page->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
 			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
+					'uid,doktype,no_search,l18n_cfg,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
 					'', '', false);
+
+			$this->removePages($morePages);
 			$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
+		}
+	}
+
+	/**
+	 * Exclude pages from given list
+	 *
+	 * @param array $pages
+	 * @return void
+	 */
+	protected function removePages(array &$pages) {
+		$language = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
+		foreach($pages as $pageUid => $page) {
+			// Hide page in default language
+			if ($language === 0 && t3lib_div::hideIfDefaultLanguage($page['l18n_cfg'])) {
+				unset($pages[$pageUid]);
+			// Hide page if no translation is set
+			} elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && t3lib_div::hideIfNotTranslated($page['l18n_cfg'])) {
+				unset($pages[$pageUid]);
+			}
 		}
 	}
 
