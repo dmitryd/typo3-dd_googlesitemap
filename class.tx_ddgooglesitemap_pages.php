@@ -76,7 +76,8 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
-				'doktype' => $GLOBALS['TSFE']->page['doktype']
+				'doktype' => $GLOBALS['TSFE']->page['doktype'],
+				'extendToSubpages' => $GLOBALS['TSFE']->page['extendToSubpages']
 			);
 		}
 		else {
@@ -86,7 +87,8 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
-				'doktype' => $page['doktype']
+				'doktype' => $page['doktype'],
+				'extendToSubpages' => $page['extendToSubpages']
 			);
 		}
 
@@ -127,9 +129,14 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 			//
 			// Notice: no sorting (for speed)!
 			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
-					'', '', false);
-			$this->pageList = array_merge($this->pageList, array_values($morePages));
+					'uid,doktype,no_search,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority,extendToSubpages',
+ 					'', '', false);
+ 			if ($pageInfo['extendToSubpages'] == 1) {
+				if ($pageInfo['no_search'] == 0)
+					$this->pageList = array_merge($this->pageList, array_values($morePages));
+			}
+			else  
+				$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
 		}
 	}
