@@ -74,7 +74,7 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 			$content .= '<changefreq>' . $changeFrequency . '</changefreq>';
 		}
 		if ($priority != '') {
-			$content .= '<priority>' . sprintf('%0.1f', $priority/10) . '</priority>';
+			$content .= '<priority>' . sprintf('%0.1F', $priority/10) . '</priority>';
 		}
 		$content .= '</url>';
 
