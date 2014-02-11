@@ -37,11 +37,7 @@ $tempColumns = Array (
 
 t3lib_div::loadTCA('pages');
 t3lib_extMgm::addTCAcolumns('pages', $tempColumns, 0);
-if (version_compare(TYPO3_branch, '6.0', '>=')) {
-	t3lib_extMgm::addFieldsToPalette('pages', 'miscellaneous', 'tx_ddgooglesitemap_priority');
-} else {
-	t3lib_extMgm::addFieldsToPalette('pages', '2', 'tx_ddgooglesitemap_priority');
-}
+t3lib_extMgm::addFieldsToPalette('pages', 'miscellaneous', 'tx_ddgooglesitemap_priority');
 
 unset($tempColumn);
 
