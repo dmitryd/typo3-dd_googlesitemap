@@ -130,8 +130,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
 					'uid,doktype,no_search,l18n_cfg,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
 					'', '', false);
-
-			$this->removePages($morePages);
+			$this->removeNonTranslatedPages($morePages);
 			$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
 		}
@@ -143,14 +142,15 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 * @param array $pages
 	 * @return void
 	 */
-	protected function removePages(array &$pages) {
+	protected function removeNonTranslatedPages(array &$pages) {
 		$language = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
-		foreach($pages as $pageUid => $page) {
+		foreach ($pages as $pageUid => $page) {
 			// Hide page in default language
 			if ($language === 0 && t3lib_div::hideIfDefaultLanguage($page['l18n_cfg'])) {
 				unset($pages[$pageUid]);
-			// Hide page if no translation is set
-			} elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && t3lib_div::hideIfNotTranslated($page['l18n_cfg'])) {
+			}
+			elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && t3lib_div::hideIfNotTranslated($page['l18n_cfg'])) {
+				// Hide page if no translation is set
 				unset($pages[$pageUid]);
 			}
 		}
