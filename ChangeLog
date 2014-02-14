@@ -3,6 +3,7 @@
 	* Fix scheduler additional field provider for TYPO3 6.x
 	* Fixed most of PhpStorm warnings
 	* Fixed #26: [FEATURE] Configurable list of non-visible page types
+	* Fixed #16: "Backend User Section" is included into sitemap
 
 2014-02-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

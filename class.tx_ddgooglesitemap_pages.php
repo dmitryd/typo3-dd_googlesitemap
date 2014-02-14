@@ -114,9 +114,10 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 */
 	protected function generateSitemapContent() {
 		// Workaround: we want the sysfolders back into the menu list!
+		// We also exclude "Backend user section" pages.
 		$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
 			'pages.doktype<200',
-			'pages.doktype<>255',
+			'pages.doktype<>255 AND pages.doktype<>6',
 			$GLOBALS['TSFE']->sys_page->where_hid_del
 		);
 
