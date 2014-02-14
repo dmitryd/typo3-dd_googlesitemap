@@ -1,4 +1,6 @@
 tx_ddgooglesitemap {
 	skipRootlineCheck = 0
 	forceStartPid = 0
+	# You can exclude more page types if you want but make sure to provide a complete list here!
+	# excludePageType = 0,3,4,5,6,7,199,254,255
 }

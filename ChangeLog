@@ -2,6 +2,7 @@
 
 	* Fix scheduler additional field provider for TYPO3 6.x
 	* Fixed most of PhpStorm warnings
+	* Fixed #26: [FEATURE] Configurable list of non-visible page types
 
 2014-02-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

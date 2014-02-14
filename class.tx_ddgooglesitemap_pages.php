@@ -53,6 +53,9 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 */
 	protected $renderer;
 
+	/** @var array */
+	protected $excludedPageTypes = array(0, 3, 4, 5, 6, 7, 199, 254, 255);
+
 	/**
 	 * Hook objects for post-processing
 	 *
@@ -66,6 +69,11 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 */
 	public function __construct() {
 		parent::__construct();
+
+		$excludePageTypes = t3lib_div::intExplode(',', $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['excludePageType'], TRUE);
+		if (count($excludePageTypes) > 0) {
+			$this->excludedPageTypes = $excludePageTypes;
+		}
 
 		$pid = intval($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['forceStartPid']);
 		if ($pid === 0 || $pid == $GLOBALS['TSFE']->id) {
@@ -155,23 +163,23 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	}
 
 	/**
+	 * Checks if the page should be included into the sitemap.
+	 *
+	 * @param array $pageInfo
+	 * @return bool
+	 */
+	protected function shouldIncludePageInSitemap(array $pageInfo) {
+		return !$pageInfo['no_search'] && !in_array($pageInfo['doktype'], $this->excludedPageTypes);
+	}
+
+	/**
 	 * Outputs information about single page
 	 *
 	 * @param	array	$pageInfo	Page information (needs 'uid' and 'SYS_LASTCHANGED' columns)
 	 * @return	void
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
-		// We ignore non-visible page types!
-		if ($pageInfo['doktype'] != 3 &&
-			$pageInfo['doktype'] != 4 &&
-			$pageInfo['doktype'] != 5 &&
-			$pageInfo['doktype'] != 6 &&
-			$pageInfo['doktype'] != 7 &&
-			$pageInfo['doktype'] != 199 &&
-			$pageInfo['doktype'] != 254 &&
-			$pageInfo['doktype'] != 255 &&
-			$pageInfo['no_search'] == 0 &&
-				($url = $this->getPageLink($pageInfo['uid']))) {
+		if ($this->shouldIncludePageInSitemap($pageInfo) && ($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url, $pageInfo['title'],
 				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
 				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority']);
