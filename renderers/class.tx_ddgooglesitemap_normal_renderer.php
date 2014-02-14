@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
+*  (c) 2009-2014 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -84,7 +84,6 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 
 /** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php'])	{
+	/** @noinspection PhpIncludeInspection */
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php']);
 }
-
-?>

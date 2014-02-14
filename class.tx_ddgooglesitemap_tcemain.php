@@ -57,7 +57,7 @@ class tx_ddgooglesitemap_tcemain {
 	 * @param array $fieldArray Modified fields
 	 * @param t3lib_TCEmain $pObj Reference to TCEmain
 	 */
-	public function processDatamap_afterDatabaseOperations($status, $table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
+	public function processDatamap_afterDatabaseOperations(/** @noinspection PhpUnusedParameterInspection */ $status, $table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
 		// Only for LIVE records!
 		if ($pObj->BE_USER->workspace == 0 && !$this->lock) {
 			$this->lock++;
@@ -153,7 +153,6 @@ class tx_ddgooglesitemap_tcemain {
 
 /** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']) {
+	/** @noinspection PhpIncludeInspection */
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']);
 }
-
-?>

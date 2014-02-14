@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
+*  (c) 2007-2014 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -75,8 +75,6 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 
 	/**
 	 * Creates an instance of this class
-	 *
-	 * @return	void
 	 */
 	public function __construct() {
 		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
@@ -107,6 +105,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 				$languageCondition = ' AND sys_language_uid=' . $language;
 			}
 
+			/** @noinspection PhpUndefinedMethodInspection */
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords,category',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
@@ -114,7 +113,9 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 				$this->cObj->enableFields('tt_news'), '', 'datetime DESC',
 				$this->offset . ',' . $this->limit
 			);
+			/** @noinspection PhpUndefinedMethodInspection */
 			$rowCount = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
+			/** @noinspection PhpUndefinedMethodInspection */
 			while (false !== ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				$forceSinglePid = NULL;
 				if ($row['category'] && $this->useCategorySinglePid) {
@@ -125,6 +126,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 						'', $row['keywords']);
 				}
 			}
+			/** @noinspection PhpUndefinedMethodInspection */
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
 			if ($rowCount === 0) {
@@ -139,10 +141,13 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	}
 
 	/**
+	 * Obtains a pid for the single view from the category.
+	 *
 	 * @param int $newsId
 	 * @return int|null
 	 */
 	protected function getSinglePidFromCategory($newsId) {
+		/** @noinspection PhpUndefinedMethodInspection */
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
 			'tt_news_cat.single_pid',
 			'tt_news',
@@ -150,12 +155,10 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 			'tt_news_cat',
 			' AND tt_news_cat_mm.uid_local = ' . intval($newsId)
 		);
+		/** @noinspection PhpUndefinedMethodInspection */
 		$categoryRecord = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-		if ($categoryRecord['single_pid']) {
-			return $categoryRecord['single_pid'];
-		} else {
-			return NULL;
-		}
+
+		return $categoryRecord['single_pid'] ?: NULL;
 	}
 
 	/**
@@ -245,7 +248,6 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 
 /** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php'])	{
+	/** @noinspection PhpIncludeInspection */
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php']);
 }
-
-?>

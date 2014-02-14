@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
+*  (c) 2007-2014 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -63,8 +63,6 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	/**
 	 * Initializes the instance of this class. This constructir sets starting
 	 * point for the sitemap to the current page id
-	 *
-	 * @return	void
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -190,6 +188,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 						'renderer' => $this->renderer,
 						'pObj' => $this
 					);
+					/** @noinspection PhpUndefinedMethodInspection */
 					$hookObject->postProcessPageInfo($parameters);
 				}
 			}
@@ -236,7 +235,6 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 
 /** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php'])	{
+	/** @noinspection PhpIncludeInspection */
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php']);
 }
-
-?>

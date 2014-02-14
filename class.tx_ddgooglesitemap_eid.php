@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
+*  (c) 2007-2014 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -93,11 +93,10 @@ class tx_ddgooglesitemap_eid {
 
 /** @noinspection PhpUndefinedVariableInspection */
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_eid.php'])	{
+	/** @noinspection PhpIncludeInspection */
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_eid.php']);
 }
 
 $generator = t3lib_div::makeInstance('tx_ddgooglesitemap_eid');
-/* @var $generator tx_ddgooglesitemap_eid */
+/* @var tx_ddgooglesitemap_eid $generator */
 $generator->main();
-
-?>

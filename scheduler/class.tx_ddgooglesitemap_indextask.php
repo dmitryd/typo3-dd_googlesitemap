@@ -132,6 +132,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 * @return	string	Information to display
 	 */
 	public function getAdditionalInformation() {
+		/** @noinspection PhpUndefinedMethodInspection */
 		$format = $GLOBALS['LANG']->sL('LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.extra_info');
 		return sprintf($format, $this->getIndexFileUrl());
 	}
