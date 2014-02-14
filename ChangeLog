@@ -6,6 +6,7 @@
 	* Fixed #16: "Backend User Section" is included into sitemap
 	* Fixed #10: lastmod is not up-to-date
 	* Fixed #4: Make tt_news link object configurable via typoscript
+	* Released version 1.3.0
 
 2014-02-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
