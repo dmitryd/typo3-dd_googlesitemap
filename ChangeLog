@@ -1,3 +1,7 @@
+2014-02-14  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Fix scheduler additional field provider for TYPO3 6.x
+
 2014-02-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Merged various pull requests from github
