@@ -144,6 +144,21 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	}
 
 	/**
+	 * Obtains the last modification date of the page.
+	 *
+	 * @param array $pageInfo
+	 * @return int
+	 */
+	protected function getLastMod(array $pageInfo) {
+		$lastModDates = t3lib_div::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
+		$lastModDates[] = intval($pageInfo['SYS_LASTCHANGED']);
+		rsort($lastModDates, SORT_NUMERIC);
+		reset($lastModDates);
+
+		return current($lastModDates);
+	}
+
+	/**
 	 * Exclude pages from given list
 	 *
 	 * @param array $pages
@@ -182,7 +197,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	protected function writeSingleUrl(array $pageInfo) {
 		if ($this->shouldIncludePageInSitemap($pageInfo) && ($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url, $pageInfo['title'],
-				$pageInfo['SYS_LASTCHANGED'] > 24*60*60 ? $pageInfo['SYS_LASTCHANGED'] : 0,
+				$this->getLastMod($pageInfo),
 				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority']);
 
 			// Post-process current page and possibly append data

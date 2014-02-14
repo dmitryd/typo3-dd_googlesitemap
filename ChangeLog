@@ -4,6 +4,7 @@
 	* Fixed most of PhpStorm warnings
 	* Fixed #26: [FEATURE] Configurable list of non-visible page types
 	* Fixed #16: "Backend User Section" is included into sitemap
+	* Fixed #10: lastmod is not up-to-date
 
 2014-02-11  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
