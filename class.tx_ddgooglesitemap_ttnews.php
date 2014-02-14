@@ -106,7 +106,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 			}
 
 			/** @noinspection PhpUndefinedMethodInspection */
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,datetime,keywords,category',
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*',
 				'tt_news', 'pid IN (' . implode(',', $this->pidList) . ')' .
 				($this->isNewsSitemap ? ' AND crdate>=' . (time() - 48*60*60) : '') .
 				$languageCondition .
@@ -121,7 +121,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 				if ($row['category'] && $this->useCategorySinglePid) {
 					$forceSinglePid = $this->getSinglePidFromCategory($row['uid']);
 				}
-				if (($url = $this->getNewsItemUrl($row['uid'], $forceSinglePid))) {
+				if (($url = $this->getNewsItemUrl($row, $forceSinglePid))) {
 					echo $this->renderer->renderEntry($url, $row['title'], $row['datetime'],
 						'', $row['keywords']);
 				}
@@ -164,19 +164,31 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	/**
 	 * Creates a link to the news item
 	 *
-	 * @param	int	$newsId	News item uid
+	 * @param array	$newsRow News item
 	 * @param	int	$forceSinglePid Single View page for this news item
 	 * @return	string
 	 */
-	protected function getNewsItemUrl($newsId, $forceSinglePid = NULL) {
-		$conf = array(
-			'parameter' => is_null($forceSinglePid) ? $this->singlePid : $forceSinglePid,
-			'additionalParams' => '&tx_ttnews[tt_news]=' . $newsId,
-			'returnLast' => 'url',
-			'useCacheHash' => true,
-		);
-		$link = htmlspecialchars($this->cObj->typoLink('', $conf));
-		return t3lib_div::locationHeaderUrl($link);
+	protected function getNewsItemUrl($newsRow, $forceSinglePid = NULL) {
+		$link = '';
+		if (is_string($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']) && is_array($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'])) {
+			$cObj = t3lib_div::makeInstance('tslib_cObj');
+			/** @var tslib_cObj $cObj */
+			$cObj->start($newsRow, 'tt_news');
+			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
+			$link = $cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'], $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']);
+			unset($cObj);
+		}
+		if ($link == '') {
+			$conf = array(
+				'additionalParams' => '&tx_ttnews[tt_news]=' . $newsRow['uid'],
+				'forceAbsoluteUrl' => 1,
+				'parameter' => $forceSinglePid ?: $this->singlePid,
+				'returnLast' => 'url',
+				'useCacheHash' => true,
+			);
+			$link = htmlspecialchars($this->cObj->typoLink('', $conf));
+		}
+		return $link;
 	}
 
 	/**
