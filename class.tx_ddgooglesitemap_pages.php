@@ -164,14 +164,12 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
 		// We ignore non-visible page types!
-		if ($pageInfo['doktype'] != 3 &&
-			$pageInfo['doktype'] != 4 &&
-			$pageInfo['doktype'] != 5 &&
-			$pageInfo['doktype'] != 6 &&
-			$pageInfo['doktype'] != 7 &&
-			$pageInfo['doktype'] != 199 &&
-			$pageInfo['doktype'] != 254 &&
-			$pageInfo['doktype'] != 255 &&
+$excludePageTypes = explode(",", str_replace(" ", "", $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['excludePageType']));
+		foreach ($excludePageTypes as $key => $var) {
+			$excludePageTypes[$key] = (int)$var;
+		}
+		
+		if (!in_array($pageInfo['doktype'], $excludePageTypes ) &&
 			$pageInfo['no_search'] == 0 &&
 				($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url, $pageInfo['title'],
