@@ -1,6 +1,7 @@
 2014-03-05  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed #27: version 1.3.0 breaks scheduler in TYPO3 6.1.7
+	* Fixed incorrect usage of a flash message queue in TYPO3 6.x
 
 2014-02-14  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 

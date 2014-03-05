@@ -287,7 +287,10 @@ else {
 			$flashMessage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
 				$message, '', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR
 			);
-			\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageQueue')->enqueue($flashMessage);
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessage $flashMessage */
+			$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
+			/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
+			$flashMessageService->getMessageQueueByIdentifier()->enqueue($flashMessage);
 		}
 	}
 }
