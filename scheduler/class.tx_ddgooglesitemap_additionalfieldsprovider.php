@@ -41,13 +41,12 @@ abstract class tx_ddgooglesitemap_additionalfieldsprovider_base {
 	 * Gets additional fields to render in the form to add/edit a task
 	 *
 	 * @param \tx_ddgooglesitemap_indextask $task The task object being eddited. Null when adding a task!
-	 * @param tx_scheduler_Module $schedulerModule
 	 * @return array A two dimensional array, array('Identifier' => array('fieldId' => array('code' => '', 'label' => '', 'cshKey' => '', 'cshLabel' => ''))
 	 */
-	public function getAdditionalFields_base(tx_ddgooglesitemap_indextask $task, $schedulerModule) {
+	public function getAdditionalFields_base(tx_ddgooglesitemap_indextask $task = NULL) {
 		$additionalFields = array();
 
-		if ($schedulerModule->CMD == 'add') {
+		if (!$task) {
 			$url = t3lib_div::locationHeaderUrl('/index.php?eID=dd_googlesitemap');
 			$task = t3lib_div::makeInstance('tx_ddgooglesitemap_indextask');
 		}
@@ -205,7 +204,7 @@ if (version_compare(TYPO3_branch, '6.0', '<')) {
 		 * @return array A two dimensional array, array('Identifier' => array('fieldId' => array('code' => '', 'label' => '', 'cshKey' => '', 'cshLabel' => ''))
 		 */
 		public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
-			return parent::getAdditionalFields_base($task, $schedulerModule);
+			return parent::getAdditionalFields_base($task);
 		}
 
 		/**
@@ -253,7 +252,7 @@ else {
 		 * @return array A two dimensional array, array('Identifier' => array('fieldId' => array('code' => '', 'label' => '', 'cshKey' => '', 'cshLabel' => ''))
 		 */
 		public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
-			return parent::getAdditionalFields_base($task, $schedulerModule);
+			return parent::getAdditionalFields_base($task);
 		}
 
 		/**
