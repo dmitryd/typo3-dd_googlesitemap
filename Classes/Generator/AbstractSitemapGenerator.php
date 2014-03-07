@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Generator;
+
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -29,11 +31,11 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author Dmitry Dulepov <support@snowflake.ch>
  */
-abstract class tx_ddgooglesitemap_generator {
+abstract class AbstractSitemapGenerator {
 	/**
 	 * cObject to generate links
 	 *
-	 * @var	tslib_cObj
+	 * @var	\TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	 */
 	protected $cObj;
 
@@ -54,7 +56,7 @@ abstract class tx_ddgooglesitemap_generator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	tx_ddgooglesitemap_abstract_renderer
+	 * @var	\tx_ddgooglesitemap_abstract_renderer
 	 */
 	protected $renderer;
 

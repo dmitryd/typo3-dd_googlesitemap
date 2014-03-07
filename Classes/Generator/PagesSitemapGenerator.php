@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Generator;
+
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -32,7 +34,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * @subpackage	tx_ddgooglesitemap
  */
 
-class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
+class PagesSitemapGenerator extends AbstractSitemapGenerator {
 
 	/**
 	 * List of page uid values to generate entries for
@@ -51,7 +53,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	tx_ddgooglesitemap_normal_renderer
+	 * @var	\tx_ddgooglesitemap_normal_renderer
 	 */
 	protected $renderer;
 
@@ -257,10 +259,4 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 		$link = htmlspecialchars($this->cObj->typoLink('', $conf));
 		return GeneralUtility::locationHeaderUrl($link);
 	}
-}
-
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php'])	{
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php']);
 }

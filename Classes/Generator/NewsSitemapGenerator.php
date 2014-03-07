@@ -22,8 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
+namespace DmitryDulepov\DdGooglesitemap\Generator;
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * This class implements news sitemap
@@ -45,7 +47,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
+class NewsSitemapGenerator extends AbstractSitemapGenerator {
 
 	/**
 	 * List of storage pages where news items are located
@@ -99,11 +101,9 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 */
 	protected function generateSitemapContent() {
 		if (count($this->pidList) > 0) {
-			GeneralUtility::loadTCA('tt_news');
-
 			$languageCondition = '';
 			$language = GeneralUtility::_GP('L');
-			if (self::testInt($language)) {
+			if (MathUtility::canBeInterpretedAsInteger($language)) {
 				$languageCondition = ' AND sys_language_uid=' . $language;
 			}
 
@@ -174,7 +174,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 		$link = '';
 		if (is_string($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']) && is_array($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'])) {
 			$cObj = GeneralUtility::makeInstance('tslib_cObj');
-			/** @var tslib_cObj $cObj */
+			/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj */
 			$cObj->start($newsRow, 'tt_news');
 			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
 			$link = $cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'], $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']);
@@ -242,26 +242,4 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 		}
 		return $result;
 	}
-
-	/**
-	 * Provides a portable testInt implementation acorss TYPO3 branches.
-	 *
-	 * @param mixed $value
-	 * @return bool
-	 */
-	static protected function testInt($value) {
-		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
-			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
-		}
-		if (class_exists('t3lib_utility_Math')) {
-			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
-		}
-		return GeneralUtility::testInt($value);
-	}
-}
-
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php'])	{
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php']);
 }

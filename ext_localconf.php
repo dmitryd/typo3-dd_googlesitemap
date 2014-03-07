@@ -17,7 +17,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['DmitryDulepov\\
 	'additionalFields' => 'DmitryDulepov\\DdGooglesitemap\\Scheduler\\AdditionalFieldsProvider'
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['pages'] = 'tx_ddgooglesitemap_pages->main';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['news'] = 'tx_ddgooglesitemap_ttnews->main';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['pages'] = 'DmitryDulepov\\DdGooglesitemap\\Generator\\PagesSitemapGenerator->main';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['news'] = 'DmitryDulepov\\DdGooglesitemap\\Generator\\NewsSitemapGenerator->main';
 
 ?>
