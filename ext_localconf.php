@@ -7,7 +7,7 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['dd_googlesitemap'] = 'EXT:dd_googlesitemap/Classes/Generator/EntryPoint.php';
 
 if (TYPO3_MODE == 'BE') {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['dd_googlesitemap'] = 'EXT:dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php:&tx_ddgooglesitemap_tcemain';
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['dd_googlesitemap'] = 'DmitryDulepov\\DdGooglesitemap\\Hooks\\TceMain';
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['DmitryDulepov\\DdGooglesitemap\\Scheduler\\Task'] = array(

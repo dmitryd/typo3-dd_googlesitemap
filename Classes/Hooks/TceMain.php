@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2013 Dmitry Dulepov <dmitry.dulepov@gmail.com>
+*  (c) 2008-2014 Dmitry Dulepov <dmitry.dulepov@gmail.com>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,7 +22,11 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Hooks;
+
+use \TYPO3\CMS\Backend\Utility\BackendUtility;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * Page and content manipulation watch.
@@ -31,7 +35,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_tcemain {
+class TceMain {
 
 	/**
 	 * If > 1 than we are in the recursive call to ourselves and we do not do anything
@@ -57,9 +61,9 @@ class tx_ddgooglesitemap_tcemain {
 	 * @param string $table Table name
 	 * @param int $id Record ID
 	 * @param array $fieldArray Modified fields
-	 * @param t3lib_TCEmain $pObj Reference to TCEmain
+	 * @param \TYPO3\CMS\Core\DataHandling\DataHandler $pObj Reference to TCEmain
 	 */
-	public function processDatamap_afterDatabaseOperations(/** @noinspection PhpUnusedParameterInspection */ $status, $table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
+	public function processDatamap_afterDatabaseOperations(/** @noinspection PhpUnusedParameterInspection */ $status, $table, $id, array $fieldArray, \TYPO3\CMS\Core\DataHandling\DataHandler &$pObj) {
 		// Only for LIVE records!
 		if ($pObj->BE_USER->workspace == 0 && !$this->lock) {
 			$this->lock++;
@@ -74,14 +78,14 @@ class tx_ddgooglesitemap_tcemain {
 	 * @param	string	$table	Table name
 	 * @param	int	$id	ID of the record
 	 * @param	array	$fieldArray	Field array
-	 * @param	t3lib_TCEmain	$pObj	Reference to TCEmain
+	 * @param	\TYPO3\CMS\Core\DataHandling\DataHandler	$pObj	Reference to TCEmain
 	 * @return	void
 	 */
-	protected function recordPageChange($table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
+	protected function recordPageChange($table, $id, array $fieldArray, \TYPO3\CMS\Core\DataHandling\DataHandler &$pObj) {
 		if (($pid = $this->getPid($table, $id, $fieldArray, $pObj)) && !isset(self::$recordedPages[$pid])) {
 			self::$recordedPages[$pid] = 1;
 
-			$record = t3lib_BEfunc::getRecord('pages', $pid, 'tx_ddgooglesitemap_lastmod');
+			$record = BackendUtility::getRecord('pages', $pid, 'tx_ddgooglesitemap_lastmod');
 			$elements = $record['tx_ddgooglesitemap_lastmod'] == '' ? array() : GeneralUtility::trimExplode(',', $record['tx_ddgooglesitemap_lastmod']);
 			$time = time();
 			// We must check if this time stamp is already in the list. This
@@ -100,8 +104,8 @@ class tx_ddgooglesitemap_tcemain {
 						),
 					),
 				);
-				$tce = GeneralUtility::makeInstance('t3lib_TCEmain');
-				/* @var $tce t3lib_TCEmain */
+				$tce = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\DataHandling\\DataHandler');
+				/* @var $tce \TYPO3\CMS\Core\DataHandling\DataHandler */
 				$tce->start($datamap, NULL);
 				$tce->enableLogging = FALSE;
 				$tce->process_datamap();
@@ -115,46 +119,22 @@ class tx_ddgooglesitemap_tcemain {
 	 * @param	string	$table	Table name
 	 * @param	int	$id	ID of the record
 	 * @param	array	$fieldArray	Field array
-	 * @param	t3lib_TCEmain	$pObj	Reference to TCEmain
+	 * @param	\TYPO3\CMS\Core\DataHandling\DataHandler	$pObj	Reference to TCEmain
 	 * @return	int
 	 */
-	protected function getPid($table, $id, array $fieldArray, t3lib_TCEmain &$pObj) {
-		if (!self::testInt($id)) {
+	protected function getPid($table, $id, array $fieldArray, \TYPO3\CMS\Core\DataHandling\DataHandler &$pObj) {
+		if (!MathUtility::canBeInterpretedAsInteger($id)) {
 			$id = $pObj->substNEWwithIDs[$id];
 		}
 		if ($table !== 'pages') {
-			if (isset($fieldArray['pid']) && self::testInt($fieldArray['pid']) && $fieldArray['pid'] >= 0) {
+			if (isset($fieldArray['pid']) && MathUtility::canBeInterpretedAsInteger($fieldArray['pid']) && $fieldArray['pid'] >= 0) {
 				$id = $fieldArray['pid'];
 			}
 			else {
-				$record = t3lib_BEfunc::getRecord($table, $id, 'pid');
+				$record = BackendUtility::getRecord($table, $id, 'pid');
 				$id = $record['pid'];
 			}
 		}
 		return $id;
 	}
-
-	/**
-	 * Provides a portable testInt implementation acorss TYPO3 branches.
-	 *
-	 * @param mixed $value
-	 * @return bool
-	 */
-	static protected function testInt($value) {
-		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
-			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
-		}
-		if (class_exists('t3lib_utility_Math')) {
-			/** @noinspection PhpDeprecationInspection */
-			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
-		}
-		/** @noinspection PhpDeprecationInspection PhpUndefinedMethodInspection */
-		return GeneralUtility::testInt($value);
-	}
-}
-
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']) {
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_tcemain.php']);
 }
