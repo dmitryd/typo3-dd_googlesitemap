@@ -24,6 +24,7 @@
 
 namespace DmitryDulepov\DdGooglesitemap\Generator;
 
+use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -56,7 +57,7 @@ abstract class AbstractSitemapGenerator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	\tx_ddgooglesitemap_abstract_renderer
+	 * @var	AbstractSitemapRenderer
 	 */
 	protected $renderer;
 
@@ -65,7 +66,7 @@ abstract class AbstractSitemapGenerator {
 	 *
 	 * @var string
 	 */
-	protected $rendererClass = 'tx_ddgooglesitemap_normal_renderer';
+	protected $rendererClass = 'DmitryDulepov\\DdGooglesitemap\\Renderers\\StandardSitemapRenderer';
 
 	/**
 	 * Initializes the instance of this class. This constructir sets starting

@@ -82,8 +82,9 @@ class NewsSitemapGenerator extends AbstractSitemapGenerator {
 	 */
 	public function __construct() {
 		$this->isNewsSitemap = (GeneralUtility::_GET('type') === 'news');
-		$this->rendererClass = ($this->isNewsSitemap ?
-			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
+		if ($this->isNewsSitemap) {
+			$this->rendererClass = 'DmitryDulepov\\DdGooglesitemap\\Renderers\\NewsSitemapRenderer';
+		}
 
 		parent::__construct();
 

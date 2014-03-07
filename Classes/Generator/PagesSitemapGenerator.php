@@ -24,6 +24,7 @@
 
 namespace DmitryDulepov\DdGooglesitemap\Generator;
 
+use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -53,7 +54,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	\tx_ddgooglesitemap_normal_renderer
+	 * @var	AbstractSitemapRenderer
 	 */
 	protected $renderer;
 
@@ -100,7 +101,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			);
 		}
 
-		$this->renderer = GeneralUtility::makeInstance('tx_ddgooglesitemap_normal_renderer');
+		$this->renderer = GeneralUtility::makeInstance('DmitryDulepov\\DdGooglesitemap\\Renderers\\StandardSitemapRenderer');
 
 		// Prepare user defined objects (if any)
 		$this->hookObjects = array();
