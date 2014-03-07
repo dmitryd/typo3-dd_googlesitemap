@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This class is a base for all sitemap generators.
  *
@@ -68,11 +70,11 @@ abstract class tx_ddgooglesitemap_generator {
 	 * point for the sitemap to the current page id
 	 */
 	public function __construct() {
-		$this->cObj = t3lib_div::makeInstance('tslib_cObj');
+		$this->cObj = GeneralUtility::makeInstance('tslib_cObj');
 		$this->cObj->start(array());
 
-		$this->offset = max(0, intval(t3lib_div::_GET('offset')));
-		$this->limit = max(0, intval(t3lib_div::_GET('limit')));
+		$this->offset = max(0, intval(GeneralUtility::_GET('offset')));
+		$this->limit = max(0, intval(GeneralUtility::_GET('limit')));
 		if ($this->limit <= 0) {
 			$this->limit = 50000;
 		}
@@ -103,7 +105,7 @@ abstract class tx_ddgooglesitemap_generator {
 	 * @return void
 	 */
 	protected function createRenderer() {
-		$this->renderer = t3lib_div::makeInstance($this->rendererClass);
+		$this->renderer = GeneralUtility::makeInstance($this->rendererClass);
 	}
 
 	/**

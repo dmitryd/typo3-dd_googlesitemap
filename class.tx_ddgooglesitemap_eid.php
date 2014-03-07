@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This class implements a Google sitemap.
  *
@@ -48,7 +50,7 @@ class tx_ddgooglesitemap_eid {
 		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap'][$sitemapType])) {
 			$userFuncRef = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap'][$sitemapType];
 			$params = array();
-			t3lib_div::callUserFunction($userFuncRef, $params, $this);
+			GeneralUtility::callUserFunction($userFuncRef, $params, $this);
 		}
 		else {
 			header('HTTP/1.0 400 Bad request', true, 400);
@@ -63,7 +65,7 @@ class tx_ddgooglesitemap_eid {
 	 * @return	string
 	 */
 	protected function getSitemapType() {
-		$type = t3lib_div::_GP('sitemap');
+		$type = GeneralUtility::_GP('sitemap');
 		return ($type ?: self::DEFAULT_SITEMAP_TYPE);
 	}
 
@@ -73,21 +75,17 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	protected function initTSFE() {
-		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-		$GLOBALS['TSFE']->connectToDB();
-		$GLOBALS['TSFE']->initFEuser();
-		$GLOBALS['TSFE']->determineId();
-		if (version_compare(TYPO3_branch, '6.1', '>=')) {
-			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
-		}
-		else {
-			$GLOBALS['TSFE']->getCompressedTCarray();
-		}
-		$GLOBALS['TSFE']->initTemplate();
-		$GLOBALS['TSFE']->getConfigArray();
+		$GLOBALS['TSFE'] = $tsfe = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
+		/** @var TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe */
+		$tsfe->connectToDB();
+		$tsfe->initFEuser();
+		$tsfe->determineId();
+		\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+		$tsfe->initTemplate();
+		$tsfe->getConfigArray();
 
 		// Get linkVars, absRefPrefix, etc
-		TSpagegen::pagegenInit();
+		\TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
 	}
 }
 
@@ -97,6 +95,6 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_goog
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_eid.php']);
 }
 
-$generator = t3lib_div::makeInstance('tx_ddgooglesitemap_eid');
+$generator = GeneralUtility::makeInstance('tx_ddgooglesitemap_eid');
 /* @var tx_ddgooglesitemap_eid $generator */
 $generator->main();

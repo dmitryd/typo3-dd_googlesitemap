@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * This class implements news sitemap
@@ -77,15 +79,15 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 * Creates an instance of this class
 	 */
 	public function __construct() {
-		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
+		$this->isNewsSitemap = (GeneralUtility::_GET('type') === 'news');
 		$this->rendererClass = ($this->isNewsSitemap ?
 			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
 
 		parent::__construct();
 
-		$singlePid = intval(t3lib_div::_GP('singlePid'));
+		$singlePid = intval(GeneralUtility::_GP('singlePid'));
 		$this->singlePid = $singlePid && $this->isInRootline($singlePid) ? $singlePid : $GLOBALS['TSFE']->id;
-		$this->useCategorySinglePid = (bool) t3lib_div::_GP('useCategorySinglePid');
+		$this->useCategorySinglePid = (bool) GeneralUtility::_GP('useCategorySinglePid');
 
 		$this->validateAndcreatePageList();
 	}
@@ -97,10 +99,10 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 */
 	protected function generateSitemapContent() {
 		if (count($this->pidList) > 0) {
-			t3lib_div::loadTCA('tt_news');
+			GeneralUtility::loadTCA('tt_news');
 
 			$languageCondition = '';
-			$language = t3lib_div::_GP('L');
+			$language = GeneralUtility::_GP('L');
 			if (self::testInt($language)) {
 				$languageCondition = ' AND sys_language_uid=' . $language;
 			}
@@ -171,7 +173,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	protected function getNewsItemUrl($newsRow, $forceSinglePid = NULL) {
 		$link = '';
 		if (is_string($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']) && is_array($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'])) {
-			$cObj = t3lib_div::makeInstance('tslib_cObj');
+			$cObj = GeneralUtility::makeInstance('tslib_cObj');
 			/** @var tslib_cObj $cObj */
 			$cObj->start($newsRow, 'tt_news');
 			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
@@ -199,7 +201,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 */
 	protected function validateAndcreatePageList() {
 		// Get pages
-		$pidList = t3lib_div::intExplode(',', t3lib_div::_GP('pidList'));
+		$pidList = GeneralUtility::intExplode(',', GeneralUtility::_GP('pidList'));
 		// Check pages
 		foreach ($pidList as $pid) {
 			if ($pid && $this->isInRootline($pid)) {
@@ -254,7 +256,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 		if (class_exists('t3lib_utility_Math')) {
 			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
 		}
-		return t3lib_div::testInt($value);
+		return GeneralUtility::testInt($value);
 	}
 }
 

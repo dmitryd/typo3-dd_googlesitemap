@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Page and content manipulation watch.
  *
@@ -80,7 +82,7 @@ class tx_ddgooglesitemap_tcemain {
 			self::$recordedPages[$pid] = 1;
 
 			$record = t3lib_BEfunc::getRecord('pages', $pid, 'tx_ddgooglesitemap_lastmod');
-			$elements = $record['tx_ddgooglesitemap_lastmod'] == '' ? array() : t3lib_div::trimExplode(',', $record['tx_ddgooglesitemap_lastmod']);
+			$elements = $record['tx_ddgooglesitemap_lastmod'] == '' ? array() : GeneralUtility::trimExplode(',', $record['tx_ddgooglesitemap_lastmod']);
 			$time = time();
 			// We must check if this time stamp is already in the list. This
 			// happens with many independent updates of the page during a
@@ -98,7 +100,7 @@ class tx_ddgooglesitemap_tcemain {
 						),
 					),
 				);
-				$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+				$tce = GeneralUtility::makeInstance('t3lib_TCEmain');
 				/* @var $tce t3lib_TCEmain */
 				$tce->start($datamap, NULL);
 				$tce->enableLogging = FALSE;
@@ -147,7 +149,7 @@ class tx_ddgooglesitemap_tcemain {
 			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
 		}
 		/** @noinspection PhpDeprecationInspection PhpUndefinedMethodInspection */
-		return t3lib_div::testInt($value);
+		return GeneralUtility::testInt($value);
 	}
 }
 
