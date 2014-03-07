@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Generator;
+
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -31,7 +33,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_eid {
+class EntryPoint {
 
 	const DEFAULT_SITEMAP_TYPE = 'pages';
 
@@ -75,8 +77,8 @@ class tx_ddgooglesitemap_eid {
 	 * @return	void
 	 */
 	protected function initTSFE() {
-		$GLOBALS['TSFE'] = $tsfe = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
-		/** @var TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe */
+		$GLOBALS['TSFE'] = $tsfe = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], GeneralUtility::_GP('id'), '');
+		/** @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe */
 		$tsfe->connectToDB();
 		$tsfe->initFEuser();
 		$tsfe->determineId();
@@ -89,12 +91,6 @@ class tx_ddgooglesitemap_eid {
 	}
 }
 
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_eid.php'])	{
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_eid.php']);
-}
-
-$generator = GeneralUtility::makeInstance('tx_ddgooglesitemap_eid');
-/* @var tx_ddgooglesitemap_eid $generator */
+$generator = GeneralUtility::makeInstance('\\DmitryDulepov\\DdGooglesitemap\\Generator\\EntryPoint');
+/* @var EntryPoint $generator */
 $generator->main();
