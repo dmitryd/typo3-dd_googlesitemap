@@ -1,3 +1,7 @@
+2014-03-07  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
+
+	* Released version 1.3.1
+
 2014-03-05  Dmitry Dulepov  <dmitry.dulepov@gmail.com>
 
 	* Fixed #27: version 1.3.0 breaks scheduler in TYPO3 6.1.7
