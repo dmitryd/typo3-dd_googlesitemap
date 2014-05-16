@@ -22,6 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Generator;
+
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * This class implements news sitemap
@@ -43,7 +47,7 @@
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
+class NewsSitemapGenerator extends AbstractSitemapGenerator {
 
 	/**
 	 * List of storage pages where news items are located
@@ -77,15 +81,16 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 * Creates an instance of this class
 	 */
 	public function __construct() {
-		$this->isNewsSitemap = (t3lib_div::_GET('type') === 'news');
-		$this->rendererClass = ($this->isNewsSitemap ?
-			'tx_ddgooglesitemap_news_renderer' : 'tx_ddgooglesitemap_normal_renderer');
+		$this->isNewsSitemap = (GeneralUtility::_GET('type') === 'news');
+		if ($this->isNewsSitemap) {
+			$this->rendererClass = 'DmitryDulepov\\DdGooglesitemap\\Renderers\\NewsSitemapRenderer';
+		}
 
 		parent::__construct();
 
-		$singlePid = intval(t3lib_div::_GP('singlePid'));
+		$singlePid = intval(GeneralUtility::_GP('singlePid'));
 		$this->singlePid = $singlePid && $this->isInRootline($singlePid) ? $singlePid : $GLOBALS['TSFE']->id;
-		$this->useCategorySinglePid = (bool) t3lib_div::_GP('useCategorySinglePid');
+		$this->useCategorySinglePid = (bool) GeneralUtility::_GP('useCategorySinglePid');
 
 		$this->validateAndcreatePageList();
 	}
@@ -97,11 +102,9 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 */
 	protected function generateSitemapContent() {
 		if (count($this->pidList) > 0) {
-			t3lib_div::loadTCA('tt_news');
-
 			$languageCondition = '';
-			$language = t3lib_div::_GP('L');
-			if (self::testInt($language)) {
+			$language = GeneralUtility::_GP('L');
+			if (MathUtility::canBeInterpretedAsInteger($language)) {
 				$languageCondition = ' AND sys_language_uid=' . $language;
 			}
 
@@ -171,8 +174,8 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	protected function getNewsItemUrl($newsRow, $forceSinglePid = NULL) {
 		$link = '';
 		if (is_string($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']) && is_array($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'])) {
-			$cObj = t3lib_div::makeInstance('tslib_cObj');
-			/** @var tslib_cObj $cObj */
+			$cObj = GeneralUtility::makeInstance('tslib_cObj');
+			/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj */
 			$cObj->start($newsRow, 'tt_news');
 			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
 			$link = $cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'], $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']);
@@ -199,7 +202,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 */
 	protected function validateAndcreatePageList() {
 		// Get pages
-		$pidList = t3lib_div::intExplode(',', t3lib_div::_GP('pidList'));
+		$pidList = GeneralUtility::intExplode(',', GeneralUtility::_GP('pidList'));
 		// Check pages
 		foreach ($pidList as $pid) {
 			if ($pid && $this->isInRootline($pid)) {
@@ -240,26 +243,4 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 		}
 		return $result;
 	}
-
-	/**
-	 * Provides a portable testInt implementation acorss TYPO3 branches.
-	 *
-	 * @param mixed $value
-	 * @return bool
-	 */
-	static protected function testInt($value) {
-		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
-			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
-		}
-		if (class_exists('t3lib_utility_Math')) {
-			return t3lib_utility_Math::canBeInterpretedAsInteger($value);
-		}
-		return t3lib_div::testInt($value);
-	}
-}
-
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php'])	{
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_googlesitemap_ttnews.php']);
 }

@@ -22,6 +22,11 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Generator;
+
+use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This class produces sitemap for pages
  *
@@ -30,7 +35,7 @@
  * @subpackage	tx_ddgooglesitemap
  */
 
-class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
+class PagesSitemapGenerator extends AbstractSitemapGenerator {
 
 	/**
 	 * List of page uid values to generate entries for
@@ -49,7 +54,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	tx_ddgooglesitemap_normal_renderer
+	 * @var	AbstractSitemapRenderer
 	 */
 	protected $renderer;
 
@@ -70,7 +75,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	public function __construct() {
 		parent::__construct();
 
-		$excludePageTypes = t3lib_div::intExplode(',', $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['excludePageType'], TRUE);
+		$excludePageTypes = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['excludePageType'], TRUE);
 		if (count($excludePageTypes) > 0) {
 			$this->excludedPageTypes = $excludePageTypes;
 		}
@@ -96,13 +101,13 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 			);
 		}
 
-		$this->renderer = t3lib_div::makeInstance('tx_ddgooglesitemap_normal_renderer');
+		$this->renderer = GeneralUtility::makeInstance('DmitryDulepov\\DdGooglesitemap\\Renderers\\StandardSitemapRenderer');
 
 		// Prepare user defined objects (if any)
 		$this->hookObjects = array();
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['generateSitemapForPagesClass'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['generateSitemapForPagesClass'] as $classRef) {
-				$this->hookObjects[] = t3lib_div::getUserObj($classRef);
+				$this->hookObjects[] = GeneralUtility::getUserObj($classRef);
 			}
 		}
 	}
@@ -150,7 +155,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	 * @return int
 	 */
 	protected function getLastMod(array $pageInfo) {
-		$lastModDates = t3lib_div::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
+		$lastModDates = GeneralUtility::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
 		$lastModDates[] = intval($pageInfo['SYS_LASTCHANGED']);
 		rsort($lastModDates, SORT_NUMERIC);
 		reset($lastModDates);
@@ -168,10 +173,10 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 		$language = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
 		foreach ($pages as $pageUid => $page) {
 			// Hide page in default language
-			if ($language === 0 && t3lib_div::hideIfDefaultLanguage($page['l18n_cfg'])) {
+			if ($language === 0 && GeneralUtility::hideIfDefaultLanguage($page['l18n_cfg'])) {
 				unset($pages[$pageUid]);
 			}
-			elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && t3lib_div::hideIfNotTranslated($page['l18n_cfg'])) {
+			elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && GeneralUtility::hideIfNotTranslated($page['l18n_cfg'])) {
 				// Hide page if no translation is set
 				unset($pages[$pageUid]);
 			}
@@ -220,7 +225,7 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 	}
 
 	protected function getChangeFrequency(array $pageInfo) {
-		$timeValues = t3lib_div::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
+		$timeValues = GeneralUtility::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
 		// Remove zeros
 		foreach ($timeValues as $k => $v) {
 			if ($v == 0) {
@@ -253,12 +258,6 @@ class tx_ddgooglesitemap_pages extends tx_ddgooglesitemap_generator {
 			'returnLast' => 'url',
 		);
 		$link = htmlspecialchars($this->cObj->typoLink('', $conf));
-		return t3lib_div::locationHeaderUrl($link);
+		return GeneralUtility::locationHeaderUrl($link);
 	}
-}
-
-/** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php'])	{
-	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/class.tx_ddgooglesitemap_pages.php']);
 }

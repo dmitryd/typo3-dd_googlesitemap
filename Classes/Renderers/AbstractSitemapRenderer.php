@@ -22,38 +22,29 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Renderers;
+
 /**
- * This class contains a renderer for the 'normal' (not 'news') sitemap.
+ * This class contains an abstract renderer for sitemaps.
+ *
+ * NOTE: interface is internal and it is not stable. Any XCLASS is not guarantied
+ * to work!
  *
  * @author	Dmitry Dulepov <dmitry.dulepov@gmail.com>
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_renderer {
+abstract class AbstractSitemapRenderer {
 
 	/**
-	 * Creates end tags for this sitemap.
+	 * Creates start XML tags (including XML prologue) for the sitemap.
 	 *
-	 * @return string	End XML tags
-	 * @see tx_ddgooglesitemap_abstract_renderer::getEndTags()
+	 * @return	string	Start tags
 	 */
-	public function getEndTags() {
-		return '</urlset>';
-	}
+	abstract public function getStartTags();
 
 	/**
-	 * Creates start tags for this sitemap.
-	 *
-	 * @return string	Start tags
-	 * @see tx_ddgooglesitemap_abstract_renderer::getStartTags()
-	 */
-	public function getStartTags() {
-		return '<?xml version="1.0" encoding="UTF-8"?>' . chr(10) .
-			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10);
-	}
-
-	/**
-	 * Renders a single entry as a normal sitemap entry.
+	 * Renders one single entry according to the format of this sitemap.
 	 *
 	 * @param	string	$url	URL of the entry
 	 * @param	string	$title	Title of the entry
@@ -64,26 +55,19 @@ class tx_ddgooglesitemap_normal_renderer extends tx_ddgooglesitemap_abstract_ren
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '') {
-		$content = '<url>';
-		$content .= '<loc>' . $url . '</loc>';
-		if ($lastModification) {
-			$content .= '<lastmod>' . date('c', $lastModification) . '</lastmod>';
-		}
-		if ($changeFrequency) {
-			$content .= '<changefreq>' . $changeFrequency . '</changefreq>';
-		}
-		if ($priority != '') {
-			$content .= '<priority>' . sprintf('%0.1F', $priority/10) . '</priority>';
-		}
-		$content .= '</url>';
+	abstract public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '');
 
-		return $content;
-	}
+	/**
+	 * Creates end XML tags for this sitemap.
+	 *
+	 * @return	string	End XML tags
+	 */
+	abstract public function getEndTags();
+
 }
 
 /** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_abstract_renderer.php'])	{
 	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php']);
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_abstract_renderer.php']);
 }
