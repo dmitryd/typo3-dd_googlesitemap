@@ -22,6 +22,10 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Scheduler;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This class provides a scheduler task to create sitemap index as required
  * by the Google sitemap protocol.
@@ -29,7 +33,7 @@
  * @author Dmitry Dulepov <dmitry.dulepov@gmail.com>
  * @see http://support.google.com/webmasters/bin/answer.py?hl=en&answer=71453
  */
-class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
+class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
 	const DEFAULT_FILE_PATH = 'typo3temp/dd_googlesitemap';
 
@@ -61,7 +65,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->indexFilePath = self::DEFAULT_FILE_PATH . '/' . t3lib_div::getRandomHexString(24) . '.xml';
+		$this->indexFilePath = self::DEFAULT_FILE_PATH . '/' . GeneralUtility::getRandomHexString(24) . '.xml';
 	}
 
 	/**
@@ -89,7 +93,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 		fwrite($indexFile, '<?xml version="1.0" encoding="UTF-8"?>' . chr(10));
 		fwrite($indexFile, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10));
 
-		$eIDscripts = t3lib_div::trimExplode(chr(10), $this->eIdScriptUrl);
+		$eIDscripts = GeneralUtility::trimExplode(chr(10), $this->eIdScriptUrl);
 		$eIdIndex = 1;
 		foreach ($eIDscripts as $eIdScriptUrl) {
 			$this->offset = 0;
@@ -235,7 +239,7 @@ class tx_ddgooglesitemap_indextask extends tx_scheduler_Task {
 	protected function buildSitemap($eIdScriptUrl, $sitemapFileName) {
 		$url = $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
 
-		$content = t3lib_div::getURL($url);
+		$content = GeneralUtility::getURL($url);
 		if ($content) {
 			file_put_contents(PATH_site . $sitemapFileName, $content);
 			$this->offset += $this->maxUrlsPerSitemap;

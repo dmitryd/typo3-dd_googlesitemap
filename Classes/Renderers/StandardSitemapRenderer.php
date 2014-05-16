@@ -22,34 +22,16 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+namespace DmitryDulepov\DdGooglesitemap\Renderers;
+
 /**
- * This class contains a renderer for the 'news' sitemap.
+ * This class contains a renderer for the 'normal' (not 'news') sitemap.
  *
  * @author	Dmitry Dulepov <dmitry.dulepov@gmail.com>
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_renderer {
-
-	/**
-	 * Contains google news site name
-	 *
-	 * @var string
-	 */
-	protected $sitename;
-
-	/**
-	 * Creates an instance of this class
-	 */
-	public function __construct() {
-		if ($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['google_news_site_name']) {
-			$this->sitename = $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['google_news_site_name'];
-		}
-		else {
-			$this->sitename = $GLOBALS['TSFE']->tmpl->setup['sitetitle'];
-		}
-		$this->sitename = htmlspecialchars($this->sitename);
-	}
+class StandardSitemapRenderer extends AbstractSitemapRenderer {
 
 	/**
 	 * Creates end tags for this sitemap.
@@ -69,13 +51,11 @@ class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_rende
 	 */
 	public function getStartTags() {
 		return '<?xml version="1.0" encoding="UTF-8"?>' . chr(10) .
-			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' .
-			'xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"' .
-			'>' . chr(10);
+			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10);
 	}
 
 	/**
-	 * Renders a single entry as a news entry.
+	 * Renders a single entry as a normal sitemap entry.
 	 *
 	 * @param	string	$url	URL of the entry
 	 * @param	string	$title	Title of the entry
@@ -89,18 +69,15 @@ class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_rende
 	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '') {
 		$content = '<url>';
 		$content .= '<loc>' . $url . '</loc>';
-		// News must have a publication date, so we put this unconditionally!
-		$content .= '<news:news>';
-		$content .= '<news:publication>';
-		$content .= '<news:name>' . $this->sitename . '</news:name>';
-		$content .= '<news:language>' . htmlspecialchars($GLOBALS['TSFE']->lang) . '</news:language>';
-		$content .= '</news:publication>';
-		$content .= '<news:publication_date>' . date('c', $lastModification) . '</news:publication_date>';
-		$content .= '<news:title>' . htmlspecialchars($title) . '</news:title>';
-		if ($keywords) {
-			$content .= '<news:keywords>' . htmlspecialchars($keywords) . '</news:keywords>';
+		if ($lastModification) {
+			$content .= '<lastmod>' . date('c', $lastModification) . '</lastmod>';
 		}
-		$content .= '</news:news>';
+		if ($changeFrequency) {
+			$content .= '<changefreq>' . $changeFrequency . '</changefreq>';
+		}
+		if ($priority != '') {
+			$content .= '<priority>' . sprintf('%0.1F', $priority/10) . '</priority>';
+		}
 		$content .= '</url>';
 
 		return $content;
@@ -108,7 +85,7 @@ class tx_ddgooglesitemap_news_renderer extends tx_ddgooglesitemap_abstract_rende
 }
 
 /** @noinspection PhpUndefinedVariableInspection */
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_news_renderer.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php'])	{
 	/** @noinspection PhpIncludeInspection */
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_news_renderer.php']);
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/dd_googlesitemap/renderers/class.tx_ddgooglesitemap_normal_renderer.php']);
 }
