@@ -139,7 +139,8 @@ class tx_ddgooglesitemap_tcemain {
 	 * @return bool
 	 */
 	static protected function testInt($value) {
-		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
+		$typo3Version = floatval($GLOBALS['TYPO3_VERSION'] ? $GLOBALS['TYPO3_VERSION'] : $GLOBALS['TYPO_VERSION']);
+		if ($typo3Version >= 6.0 && class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
 			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		}
 		if (class_exists('t3lib_utility_Math')) {
