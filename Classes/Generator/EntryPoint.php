@@ -81,6 +81,7 @@ class EntryPoint {
 		/** @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe */
 		$tsfe->connectToDB();
 		$tsfe->initFEuser();
+		$tsfe->checkAlternativeIdMethods();
 		$tsfe->determineId();
 		\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
 		$tsfe->initTemplate();
