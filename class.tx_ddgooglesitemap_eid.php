@@ -76,6 +76,7 @@ class tx_ddgooglesitemap_eid {
 		$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], t3lib_div::_GP('id'), '');
 		$GLOBALS['TSFE']->connectToDB();
 		$GLOBALS['TSFE']->initFEuser();
+		$GLOBALS['TSFE']->checkAlternativeIdMethods();
 		$GLOBALS['TSFE']->determineId();
 		if (version_compare(TYPO3_branch, '6.1', '>=')) {
 			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
