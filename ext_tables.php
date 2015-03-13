@@ -1,7 +1,4 @@
 <?php
-if (!defined ('TYPO3_MODE')) {
-	die ('Access denied.');
-}
 
 $tempColumns = Array (
 	'tx_ddgooglesitemap_lastmod' => Array (
@@ -35,10 +32,7 @@ $tempColumns = Array (
 );
 
 
-t3lib_div::loadTCA('pages');
-t3lib_extMgm::addTCAcolumns('pages', $tempColumns, 0);
-t3lib_extMgm::addFieldsToPalette('pages', 'miscellaneous', 'tx_ddgooglesitemap_priority');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages', $tempColumns, 0);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('pages', 'miscellaneous', 'tx_ddgooglesitemap_priority');
 
 unset($tempColumn);
-
-?>

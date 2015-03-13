@@ -174,7 +174,7 @@ class TtNewsSitemapGenerator extends AbstractSitemapGenerator {
 	protected function getNewsItemUrl($newsRow, $forceSinglePid = NULL) {
 		$link = '';
 		if (is_string($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']) && is_array($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'])) {
-			$cObj = GeneralUtility::makeInstance('tslib_cObj');
+			$cObj = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer');
 			/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj */
 			$cObj->start($newsRow, 'tt_news');
 			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
