@@ -76,8 +76,8 @@ abstract class AbstractSitemapGenerator {
 		$this->cObj = GeneralUtility::makeInstance('tslib_cObj');
 		$this->cObj->start(array());
 
-		$this->offset = max(0, intval(GeneralUtility::_GET('offset')));
-		$this->limit = max(0, intval(GeneralUtility::_GET('limit')));
+		$this->offset = max(0, (int)GeneralUtility::_GET('offset'));
+		$this->limit = max(0, (int)GeneralUtility::_GET('limit'));
 		if ($this->limit <= 0) {
 			$this->limit = 50000;
 		}
