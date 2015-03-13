@@ -46,7 +46,7 @@ $EM_CONF[$_EXTKEY] = array (
   array (
   ),
   'user' => 'dmitry',
-  'comment' => 'Bug fixes + TYPO3 6.2 compatibility + typolink for tt_news',
+  'comment' => 'TYPO3 7.0 compatibility update. Note that news sitemap is renamed to tt_news!',
 );
 
 ?>
