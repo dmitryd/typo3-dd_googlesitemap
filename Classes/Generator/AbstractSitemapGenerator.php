@@ -73,7 +73,7 @@ abstract class AbstractSitemapGenerator {
 	 * point for the sitemap to the current page id
 	 */
 	public function __construct() {
-		$this->cObj = GeneralUtility::makeInstance('tslib_cObj');
+		$this->cObj = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer');
 		$this->cObj->start(array());
 
 		$this->offset = max(0, (int)GeneralUtility::_GET('offset'));
