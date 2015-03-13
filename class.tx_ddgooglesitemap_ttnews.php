@@ -248,7 +248,7 @@ class tx_ddgooglesitemap_ttnews extends tx_ddgooglesitemap_generator {
 	 * @return bool
 	 */
 	static protected function testInt($value) {
-		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility')) {
+		if (class_exists('\TYPO3\CMS\Core\Utility\MathUtility') && method_exists('\TYPO3\CMS\Core\Utility\MathUtility', 'canBeInterpretedAsInteger')) {
 			return \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($value);
 		}
 		if (class_exists('t3lib_utility_Math')) {
