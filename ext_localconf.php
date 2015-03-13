@@ -18,6 +18,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['DmitryDulepov\\
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['pages'] = 'DmitryDulepov\\DdGooglesitemap\\Generator\\PagesSitemapGenerator->main';
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['news'] = 'DmitryDulepov\\DdGooglesitemap\\Generator\\NewsSitemapGenerator->main';
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dd_googlesitemap']['sitemap']['tt_news'] = 'DmitryDulepov\\DdGooglesitemap\\Generator\\TtNewsSitemapGenerator->main';
 
 ?>

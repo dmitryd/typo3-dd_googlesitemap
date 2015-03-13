@@ -47,7 +47,7 @@ use \TYPO3\CMS\Core\Utility\MathUtility;
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class NewsSitemapGenerator extends AbstractSitemapGenerator {
+class TtNewsSitemapGenerator extends AbstractSitemapGenerator {
 
 	/**
 	 * List of storage pages where news items are located
