@@ -91,6 +91,6 @@ class EntryPoint {
 	}
 }
 
-$generator = GeneralUtility::makeInstance('\\DmitryDulepov\\DdGooglesitemap\\Generator\\EntryPoint');
+$generator = GeneralUtility::makeInstance('DmitryDulepov\\DdGooglesitemap\\Generator\\EntryPoint');
 /* @var EntryPoint $generator */
 $generator->main();
