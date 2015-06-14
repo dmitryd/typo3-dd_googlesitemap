@@ -24,7 +24,7 @@ $tempColumns = Array (
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.6', 6),
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.7', 7),
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.8', 8),
-				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.8', 9),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.9', 9),
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_priority.10', 10),
 			)
 		)
