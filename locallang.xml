@@ -20,6 +20,7 @@
 			<label index="pages.tx_ddgooglesitemap_priority.10">1.0 (highest)</label>
 			<label index="scheduler.title">Generate offline sitemap</label>
 			<label index="scheduler.description">Generates offline index file and sitemaps</label>
+			<label index="scheduler.domainRecordLabel">Domain:</label>
 			<label index="scheduler.eIDFieldLabel">eID script URLs (one per line):</label>
 			<label index="scheduler.indexFieldLabel">Index file path:</label>
 			<label index="scheduler.maxUrlsPerSitemapLabel">URLs per sitemap:</label>

@@ -40,6 +40,9 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	/** @var string */
 	private $baseUrl;
 
+	/** @var integer */
+	protected $domainRecordId;
+
 	/** @var string */
 	protected $eIdScriptUrl;
 
@@ -142,6 +145,17 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	}
 
 	/**
+	 * Sets the domain record for eID script. This is called from the task
+	 * configuration inside scheduler.
+	 *
+	 * @return integer
+	 * @see tx_ddgooglesitemap_additionalfieldsprovider
+	 */
+	public function getDomainRecordId() {
+		return $this->domainRecordId;
+	}
+
+	/**
 	 * Sets the url of the eID script. This is called from the task
 	 * configuration inside scheduler.
 	 *
@@ -172,6 +186,17 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 */
 	public function getMaxUrlsPerSitemap() {
 		return $this->maxUrlsPerSitemap;
+	}
+
+	/**
+	 * Sets the domain record uid. This is called from the task
+	 * configuration inside scheduler.
+	 *
+	 * @param integer $uid
+	 * @see tx_ddgooglesitemap_additionalfieldsprovider
+	 */
+	public function setDomainRecordId($uid) {
+		$this->domainRecordId = $uid;
 	}
 
 	/**
@@ -213,20 +238,10 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 * @return void
 	 */
 	protected function buildBaseUrl() {
-		$urlParts = parse_url($this->eIdScriptUrl);
-		$this->baseUrl = $urlParts['scheme'] . '://';
-		if ($urlParts['user']) {
-			$this->baseUrl .= $urlParts['user'];
-			if ($urlParts['pass']) {
-				$this->baseUrl .= ':' . $urlParts['pass'];
-			}
-			$this->baseUrl .= '@';
+		$sysDomainRow = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('domainName', 'sys_domain', 'uid ='. $this->domainRecordId);
+		if (is_array($sysDomainRow)) {
+			$this->baseUrl = 'http://'. $sysDomainRow['domainName'] .'/';
 		}
-		$this->baseUrl .= $urlParts['host'];
-		if ($urlParts['port']) {
-			$this->baseUrl .= ':' . $urlParts['port'];
-		}
-		$this->baseUrl .= '/';
 	}
 
 	/**
@@ -237,7 +252,7 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 * @see tx_ddgooglesitemap_additionalfieldsprovider
 	 */
 	protected function buildSitemap($eIdScriptUrl, $sitemapFileName) {
-		$url = $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
+		$url = $this->baseUrl . $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
 
 		$content = GeneralUtility::getURL($url);
 		if ($content) {

@@ -63,6 +63,12 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		$indexFilePath = $task->getIndexFilePath();
 		$maxUrlsPerSitemap = $task->getMaxUrlsPerSitemap();
 
+		$additionalFields['domainRecord'] = array(
+			'code'     => '<select class="wide" type="text" name="tx_scheduler[domainRecord]">'. $this->buildSelectItems($task->getDomainRecordId()) .'</select>',
+			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.domainRecordLabel',
+			'cshKey'   => '',
+			'cshLabel' => ''
+		);
 		$additionalFields['eIdUrl'] = array(
 			'code'     => '<textarea style="width:350px;height:200px" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.eIDFieldLabel',
@@ -95,6 +101,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
 		$errors = array();
 
+		$this->validateDomainRecord($submittedData, $errors);
 		$this->validateEIdUrl($submittedData, $errors);
 		$this->validateMaxUrlsPerSitemap($submittedData, $errors);
 		$this->validateIndexFilePath($submittedData, $errors);
@@ -117,6 +124,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	 */
 	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
 		/** @var \DmitryDulepov\DdGooglesitemap\Scheduler\Task $task */
+		$task->setDomainRecordId($submittedData['domainRecord']);
 		$task->setEIdScriptUrl($submittedData['eIdUrl']);
 		$task->setMaxUrlsPerSitemap($submittedData['maxUrlsPerSitemap']);
 		$task->setIndexFilePath($submittedData['indexFilePath']);
@@ -136,6 +144,24 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		$flashMessageService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
 		/** @var \TYPO3\CMS\Core\Messaging\FlashMessageService $flashMessageService */
 		$flashMessageService->getMessageQueueByIdentifier()->enqueue($flashMessage);
+	}
+
+	/**
+	 * Validates the domain record.
+	 *
+	 * @param array $submittedData
+	 * @param array $errors
+	 */
+	protected function validateDomainRecord(array &$submittedData, array &$errors) {
+		$submittedData['domainRecord'] = intval($submittedData['domainRecord']);
+		if ($submittedData['domainRecord'] <= 0) {
+			$errors[] = 'scheduler.error.missingHost';
+		} else {
+			$sysDomainRow = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('uid', 'sys_domain', 'uid ='. $submittedData['domainRecord']);
+			if (FALSE === is_array($sysDomainRow)) {
+				$errors[] = 'scheduler.error.missingHost';
+			}
+		}
 	}
 
 	/**
@@ -177,7 +203,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	}
 
 	/**
-	 * Valies the URL of the eID script.
+	 * Validates the URL of the eID script.
 	 *
 	 * @param array $submittedData
 	 * @param array $errors
@@ -185,18 +211,6 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	protected function validateEIdUrl(array &$submittedData, array &$errors) {
 		foreach (GeneralUtility::trimExplode(chr(10), $submittedData['eIdUrl']) as $url) {
 			if (FALSE !== ($urlParts = parse_url($url))) {
-				if (!$urlParts['host']) {
-					$errors[] = 'scheduler.error.missingHost';
-				}
-				else {
-					/** @noinspection PhpUndefinedMethodInspection */
-					list($count) = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT(*) AS counter', 'sys_domain',
-							'domainName=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($urlParts['host'], 'sys_domain')
-					);
-					if ($count['counter'] == 0) {
-						$errors[] = 'scheduler.error.missingHost';
-					}
-				}
 				if (!preg_match('/(?:^|&)eID=dd_googlesitemap/', $urlParts['query'])) {
 					$errors[] = 'scheduler.error.badPath';
 				}
@@ -205,5 +219,24 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 				}
 			}
 		}
+	}
+
+	/**
+	 * Generates a selectbox for domain records
+	 *
+	 * @param integer $selectedRecord
+	 * @return string
+	 */
+	protected function buildSelectItems($selectedRecord) {
+		$availableDomainRecords = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,domainName', 'sys_domain', '1=1', '', 'domainName ASC');
+		$list = array('<option value=""></option>');
+
+		if (is_array($availableDomainRecords)) {
+			foreach($availableDomainRecords as $record) {
+				$selected = ($record['uid'] == $selectedRecord) ? ' selected="selected"': '';
+				$list[] = '<option value="'. $record['uid'] .'"'. $selected .'>'. htmlspecialchars($record['domainName']) .'</option>';
+			}
+		}
+		return implode('', $list);
 	}
 }
