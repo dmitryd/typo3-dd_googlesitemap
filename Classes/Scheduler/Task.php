@@ -98,13 +98,16 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 		foreach ($eIDscripts as $eIdScriptUrl) {
 			$this->offset = 0;
 			$currentFileNumber = 1;
+			$currentFileHash = '';
 			$lastFileHash = '';
 			do {
 				$sitemapFileName = sprintf($this->sitemapFileFormat, $eIdIndex, $currentFileNumber++);
 				$this->buildSitemap($eIdScriptUrl, $sitemapFileName);
 
 				$isSitemapEmpty = $this->isSitemapEmpty($sitemapFileName);
-				$currentFileHash = md5_file(PATH_site . $sitemapFileName);
+				if (is_file(PATH_site . $sitemapFileName)) {
+					$currentFileHash = md5_file(PATH_site . $sitemapFileName);
+				}
 				$stopLoop = $isSitemapEmpty || ($currentFileHash == $lastFileHash);
 
 				if ($stopLoop) {
