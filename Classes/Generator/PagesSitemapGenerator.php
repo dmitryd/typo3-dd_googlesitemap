@@ -87,7 +87,8 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
-				'doktype' => $GLOBALS['TSFE']->page['doktype']
+				'doktype' => $GLOBALS['TSFE']->page['doktype'],
+				'no_search' => $GLOBALS['TSFE']->page['no_search']
 			);
 		}
 		else {
@@ -96,8 +97,9 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				'uid' => $page['uid'],
 				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
-				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
-				'doktype' => $page['doktype']
+				'tx_ddgooglesitemap_priority' => $page['tx_ddgooglesitemap_priority'],
+				'doktype' => $page['doktype'],
+				'no_search' => $page['no_search']
 			);
 		}
 
