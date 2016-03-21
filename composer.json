@@ -2,8 +2,8 @@
     "name": "dmitryd/typo3-dd-googlesitemap",
     "type": "typo3-cms-extension",
     "description": "Google sitemaps for TYPO3",
-    "homepage": "https://github.com/dmitryd/typo3-dd_googlesitemap  ",
-    "version": "2.0.5",
+    "homepage": "https://github.com/dmitryd/typo3-dd_googlesitemap",
+    "version": "2.0.6",
     "license": "LGPL-3.0+",
     "keywords": [
         "TYPO3",
@@ -20,6 +20,10 @@
         "psr-4": {
             "DmitryDulepov\\DdGooglesitemap\\": "Classes"
         }
+    },
+    "replace": {
+        "dd_googlesitemap": "self.version",
+        "typo3-ter/dd-googlesitemap": "self.version"
     },
     "authors": [
         {

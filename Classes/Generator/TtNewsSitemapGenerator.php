@@ -178,7 +178,7 @@ class TtNewsSitemapGenerator extends AbstractSitemapGenerator {
 			/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj */
 			$cObj->start($newsRow, 'tt_news');
 			$cObj->setCurrentVal($forceSinglePid ?: $this->singlePid);
-			$link = $cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'], $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink']);
+			$link = $cObj->cObjGetSingle($GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink'], $GLOBALS['TSFE']->tmpl->setup['tx_ddgooglesitemap.']['newsLink.']);
 			unset($cObj);
 		}
 		if ($link == '') {
