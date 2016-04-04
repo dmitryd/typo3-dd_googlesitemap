@@ -85,6 +85,7 @@ class EntryPoint {
 		$tsfe->determineId();
 		$tsfe->initTemplate();
 		$tsfe->getConfigArray();
+		$tsfe->settingLanguage();
 
 		// Get linkVars, absRefPrefix, etc
 		\TYPO3\CMS\Frontend\Page\PageGenerator::pagegenInit();
