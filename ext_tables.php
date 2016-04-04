@@ -30,10 +30,30 @@ $tempColumns = Array (
 			)
 		)
 	),
+	'tx_ddgooglesitemap_change_frequency' => array(
+		'exclude' => 1,
+		'label' => 'LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency',
+		'displayCond' => 'FIELD:no_search:=:0',
+		'config' => array(
+			'type' => 'select',
+			'items' => array(
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.calculate', ''),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.always', 'always'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.hourly', 'hourly'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.daily', 'daily'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.weekly', 'weekly'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.monthly', 'monthly'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.yearly', 'yearly'),
+				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.never', 'never'),
+			)
+		)
+	),
 );
 
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('pages', $tempColumns);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('pages', 'miscellaneous', 'tx_ddgooglesitemap_priority');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
+	'pages', 'miscellaneous', 'tx_ddgooglesitemap_priority, tx_ddgooglesitemap_change_frequency'
+);
 
 unset($tempColumn);
