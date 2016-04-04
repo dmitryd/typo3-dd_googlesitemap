@@ -30,14 +30,14 @@
 			<label index="scheduler.error.badNumberOfUrls">Number of URLs must be positive.</label>
 			<label index="scheduler.extra_info">Index file: `%1$s`</label>
 			<label index="pages.tx_ddgooglesitemap_change_frequency">Sitemap change frequency:</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.calculate">calculate automatically</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.always">always (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.hourly">hourly (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.daily">daily (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.weekly">weekly (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.monthly">monthly (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.yearly">yearly (static)</label>
-			<label index="pages.tx_ddgooglesitemap_change_frequency.never">never (static)</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.calculate">Auto</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.always">Always</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.hourly">Hourly</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.daily">Daily</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.weekly">Weekly</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.monthly">Monthly</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.yearly">Yearly</label>
+			<label index="pages.tx_ddgooglesitemap_change_frequency.never">Never</label>
 		</languageKey>
 	</data>
 </T3locallang>
