@@ -87,6 +87,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
+				'tx_ddgooglesitemap_change_frequency' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_change_frequency'],
 				'doktype' => $GLOBALS['TSFE']->page['doktype'],
 				'no_search' => $GLOBALS['TSFE']->page['no_search']
 			);
@@ -98,6 +99,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $page['tx_ddgooglesitemap_priority'],
+				'tx_ddgooglesitemap_change_frequency' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_change_frequency'],
 				'doktype' => $page['doktype'],
 				'no_search' => $page['no_search']
 			);
@@ -141,9 +143,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			//
 			// Notice: no sorting (for speed)!
 			$GLOBALS['TSFE']->sys_page->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
-			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,doktype,no_search,l18n_cfg,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority',
-					'', '', false);
+			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'], '*', '', '', false);
 			$this->removeNonTranslatedPages($morePages);
 			$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
@@ -226,7 +226,29 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 		}
 	}
 
+	/**
+	 * Fetches change frequency value.
+	 *
+	 * @param array $pageInfo
+	 * @return string
+	 */
 	protected function getChangeFrequency(array $pageInfo) {
+		if ($pageInfo['tx_ddgooglesitemap_change_frequency']) {
+			$changeFrequency = $pageInfo['tx_ddgooglesitemap_change_frequency'];
+		} else {
+			$changeFrequency = $this->calculateChangeFrequency($pageInfo);
+		}
+
+		return $changeFrequency;
+	}
+
+	/**
+	 * Calculates change frequency.
+	 *
+	 * @param array $pageInfo
+	 * @return string
+	 */
+	protected function calculateChangeFrequency(array $pageInfo) {
 		$timeValues = GeneralUtility::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
 		// Remove zeros
 		foreach ($timeValues as $k => $v) {

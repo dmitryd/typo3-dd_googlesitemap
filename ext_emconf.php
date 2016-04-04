@@ -27,7 +27,7 @@ $EM_CONF[$_EXTKEY] = array (
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'author_company' => 'SIA "ACCIO"',
-  'version' => '2.0.6',
+  'version' => '2.1.0',
   'constraints' => 
   array (
     'depends' => 
@@ -45,7 +45,7 @@ $EM_CONF[$_EXTKEY] = array (
   array (
   ),
   'user' => 'dmitry',
-  'comment' => 'Bug fixing release',
+  'comment' => 'Warning! Database update required!',
 );
 
 ?>
