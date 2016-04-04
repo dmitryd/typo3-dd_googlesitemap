@@ -36,6 +36,7 @@ $tempColumns = Array (
 		'displayCond' => 'FIELD:no_search:=:0',
 		'config' => array(
 			'type' => 'select',
+			'renderType' => 'selectSingle',
 			'items' => array(
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.calculate', ''),
 				array('LLL:EXT:dd_googlesitemap/locallang.xml:pages.tx_ddgooglesitemap_change_frequency.always', 'always'),
