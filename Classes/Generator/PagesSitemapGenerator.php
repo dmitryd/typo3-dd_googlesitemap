@@ -230,6 +230,8 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	}
 
 	/**
+	 * Fetches change frequency value.
+	 *
 	 * @param array $pageInfo
 	 * @return string
 	 */
@@ -244,6 +246,8 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	}
 
 	/**
+	 * Calculates change frequency.
+	 *
 	 * @param array $pageInfo
 	 * @return string
 	 */
@@ -263,7 +267,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			$sum += ($timeValues[$i] - $timeValues[$i - 1]);
 		}
 		$average = ($sum/(count($timeValues) - 1));
-		return 	($average >= 180*24*60*60 ? 'yearly' :
+		return ($average >= 180*24*60*60 ? 'yearly' :
 				($average <= 24*60*60 ? 'daily' :
 				($average <= 60*60 ? 'hourly' :
 				($average <= 14*24*60*60 ? 'weekly' : 'monthly'))));
