@@ -143,10 +143,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			//
 			// Notice: no sorting (for speed)!
 			$GLOBALS['TSFE']->sys_page->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
-			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'],
-					'uid,doktype,no_search,l18n_cfg,SYS_LASTCHANGED,tx_ddgooglesitemap_lastmod,tx_ddgooglesitemap_priority' .
-					',tx_ddgooglesitemap_change_frequency',
-					'', '', false);
+			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'], '*', '', '', false);
 			$this->removeNonTranslatedPages($morePages);
 			$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
