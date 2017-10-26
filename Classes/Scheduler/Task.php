@@ -107,7 +107,7 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 				$this->buildSitemap($eIdScriptUrl, $sitemapFileName);
 
 				$isSitemapEmpty = $this->isSitemapEmpty($sitemapFileName);
-				$currentFileHash = md5_file(PATH_site . $sitemapFileName);
+				$currentFileHash = $isSitemapEmpty ? -1 : md5_file(PATH_site . $sitemapFileName);
 				$stopLoop = $isSitemapEmpty || ($currentFileHash == $lastFileHash);
 
 				if ($stopLoop) {
