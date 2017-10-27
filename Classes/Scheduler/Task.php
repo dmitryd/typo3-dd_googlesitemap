@@ -252,6 +252,12 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 * @see tx_ddgooglesitemap_additionalfieldsprovider
 	 */
 	protected function buildSitemap($eIdScriptUrl, $sitemapFileName) {
+        $urlParts = parse_url($this->eIdScriptUrl);
+        if (isset($urlParts['scheme'], $urlParts['host'])) {
+            $eIdScriptUrl = str_replace($urlParts['scheme'].'://', '', $eIdScriptUrl);
+            $eIdScriptUrl = str_replace($urlParts['host'].'/', '', $eIdScriptUrl);
+        }
+
 		$url = $this->baseUrl . $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
 
 		$content = GeneralUtility::getURL($url);
