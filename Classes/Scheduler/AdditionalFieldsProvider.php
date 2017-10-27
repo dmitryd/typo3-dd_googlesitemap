@@ -64,25 +64,25 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		$maxUrlsPerSitemap = $task->getMaxUrlsPerSitemap();
 
 		$additionalFields['domainRecord'] = array(
-			'code'     => '<select class="wide" type="text" name="tx_scheduler[domainRecord]">'. $this->buildSelectItems($task->getDomainRecordId()) .'</select>',
+			'code'     => '<select class="wide form-control" type="text" name="tx_scheduler[domainRecord]">'. $this->buildSelectItems($task->getDomainRecordId()) .'</select>',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.domainRecordLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
 		);
 		$additionalFields['eIdUrl'] = array(
-			'code'     => '<textarea style="width:350px;height:200px" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
+			'code'     => '<textarea style="width:350px;height:200px" class="form-control" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.eIDFieldLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
 		);
 		$additionalFields['indexFilePath'] = array(
-			'code'     => '<input class="wide" type="text" name="tx_scheduler[indexFilePath]" value="' . htmlspecialchars($indexFilePath) . '" />',
+			'code'     => '<input class="wide form-control" type="text" name="tx_scheduler[indexFilePath]" value="' . htmlspecialchars($indexFilePath) . '" />',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.indexFieldLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
 		);
 		$additionalFields['maxUrlsPerSitemap'] = array(
-			'code'     => '<input type="text" name="tx_scheduler[maxUrlsPerSitemap]" value="' . $maxUrlsPerSitemap . '" />',
+			'code'     => '<input class="form-control" type="text" name="tx_scheduler[maxUrlsPerSitemap]" value="' . $maxUrlsPerSitemap . '" />',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.maxUrlsPerSitemapLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
