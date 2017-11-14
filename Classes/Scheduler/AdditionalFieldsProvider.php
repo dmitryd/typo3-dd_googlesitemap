@@ -177,7 +177,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	}
 
 	/**
-	 * Valies the URL of the eID script.
+	 * Validates the URL of the eID script.
 	 *
 	 * @param array $submittedData
 	 * @param array $errors
