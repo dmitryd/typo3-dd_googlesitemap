@@ -126,13 +126,13 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 		// Workaround: we want the sysfolders back into the menu list!
 		// We also exclude "Backend user section" pages.
 		$useDbalSyntax = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch) >= 8004000;
-		if($useDbalSyntax){
+		if ($useDbalSyntax) {
 			$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
 				'`pages`.`doktype` < 200',
 				'`pages`.`doktype` <> 255 AND `pages`.`doktype` <> 6',
 				$GLOBALS['TSFE']->sys_page->where_hid_del
 			);
-		}else{
+		} else {
 			$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
 				'pages.doktype<200',
 				'pages.doktype<>255 AND pages.doktype<>6',
