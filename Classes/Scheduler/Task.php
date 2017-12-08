@@ -24,6 +24,8 @@
 
 namespace DmitryDulepov\DdGooglesitemap\Scheduler;
 
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -239,10 +241,26 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	protected function buildSitemap($eIdScriptUrl, $sitemapFileName) {
 		$url = $eIdScriptUrl . sprintf('&offset=%d&limit=%d', $this->offset, $this->maxUrlsPerSitemap);
 
-		$content = GeneralUtility::getURL($url);
+		$report = array();
+		$content = GeneralUtility::getUrl($url, 0, FALSE, $report);
+
 		if ($content) {
 			file_put_contents(PATH_site . $sitemapFileName, $content);
 			$this->offset += $this->maxUrlsPerSitemap;
+		} else {
+			$message = sprintf('Failed to request sitemap URL "%s": %s', $url, $report['message']);
+
+			/** @var $logger LoggerInterface */
+			$logger = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
+			$logger->error($message, $report);
+
+			/** @var $flashMessage \TYPO3\CMS\Core\Messaging\FlashMessage */
+			$flashMessage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessage', $message, '', FlashMessage::ERROR);
+			/** @var $flashMessageService \TYPO3\CMS\Core\Messaging\FlashMessageService */
+			$flashMessageService = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageService');
+			/** @var $defaultFlashMessageQueue \TYPO3\CMS\Core\Messaging\FlashMessageQueue */
+			$defaultFlashMessageQueue = $flashMessageService->getMessageQueueByIdentifier();
+			$defaultFlashMessageQueue->enqueue($flashMessage);
 		}
 	}
 
