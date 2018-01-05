@@ -23,7 +23,7 @@
 			<label index="scheduler.eIDFieldLabel">eID script URLs (one per line):</label>
 			<label index="scheduler.indexFieldLabel">Index file path:</label>
 			<label index="scheduler.maxUrlsPerSitemapLabel">URLs per sitemap:</label>
-			<label index="scheduler.error.missingHost">Host is missing or does not match any of TYPO3 hosts from the installation.</label>
+			<label index="scheduler.error.missingHost">Host is missing or does not match any of TYPO3 hosts from the installation. Did you add a domain record in TYPO3?</label>
 			<label index="scheduler.error.badPath">This task can only fetch scripts from dd_googlesitemap, not other URLs.</label>
 			<label index="scheduler.error.badParameters">'offset' and 'limit' parameters may not appear in the URL.</label>
 			<label index="scheduler.error.badIndexFilePath">Index file path must be relative to the site's main directory. The referenced directory must exist (the default directory is created when the extension is installed).</label>
