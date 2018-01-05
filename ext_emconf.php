@@ -27,12 +27,12 @@ $EM_CONF[$_EXTKEY] = array (
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'author_company' => 'SIA "ACCIO"',
-  'version' => '2.1.3',
+  'version' => '2.1.4',
   'constraints' => 
   array (
     'depends' => 
     array (
-      'typo3' => '6.2.0-8.7.999',
+      'typo3' => '6.2.0-8.999.999',
     ),
     'conflicts' => 
     array (

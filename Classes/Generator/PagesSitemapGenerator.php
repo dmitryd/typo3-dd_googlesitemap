@@ -26,6 +26,7 @@ namespace DmitryDulepov\DdGooglesitemap\Generator;
 
 use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * This class produces sitemap for pages
@@ -124,11 +125,20 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	protected function generateSitemapContent() {
 		// Workaround: we want the sysfolders back into the menu list!
 		// We also exclude "Backend user section" pages.
-		$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
-			'pages.doktype<200',
-			'pages.doktype<>255 AND pages.doktype<>6',
-			$GLOBALS['TSFE']->sys_page->where_hid_del
-		);
+		$useDbalSyntax = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_branch) >= 8004000;
+		if ($useDbalSyntax) {
+			$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
+				'`pages`.`doktype` < 200',
+				'`pages`.`doktype` <> 255 AND `pages`.`doktype` <> 6',
+				$GLOBALS['TSFE']->sys_page->where_hid_del
+			);
+		} else {
+			$GLOBALS['TSFE']->sys_page->where_hid_del = str_replace(
+				'pages.doktype<200',
+				'pages.doktype<>255 AND pages.doktype<>6',
+				$GLOBALS['TSFE']->sys_page->where_hid_del
+			);
+		}
 
 		while (!empty($this->pageList) && $this->generatedItemCount - $this->offset <= $this->limit) {
 			$pageInfo = array_shift($this->pageList);
