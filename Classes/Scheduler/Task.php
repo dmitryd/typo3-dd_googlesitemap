@@ -51,6 +51,9 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	/** @var int */
 	protected $maxUrlsPerSitemap = 50000;
 
+	/** @var bool */
+	protected $renderAllLanguages = false;
+
 	/** @var string */
 	private $sitemapFileFormat;
 
@@ -88,6 +91,7 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 * Should return true on successful execution, false on error.
 	 *
 	 * @return boolean    Returns true on successful execution, false on error
+	 * @throws \InvalidArgumentException
 	 */
 	public function execute() {
 		$indexFilePathTemp = PATH_site . $this->indexFilePath . '.tmp';
@@ -96,6 +100,7 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 		fwrite($indexFile, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10));
 
 		$eIDscripts = GeneralUtility::trimExplode(chr(10), $this->eIdScriptUrl);
+		$eIDscripts = $this->expandEidUriWithLanguages($eIDscripts);
 		$eIdIndex = 1;
 		foreach ($eIDscripts as $eIdScriptUrl) {
 			$this->offset = 0;
@@ -210,6 +215,87 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	}
 
 	/**
+	 * Should rendering all languages
+	 *
+	 * @return bool
+	 */
+	public function isRenderAllLanguages() {
+		return $this->renderAllLanguages;
+	}
+
+	/**
+	 * Enabling rendering all languages
+	 *
+	 * @param bool $renderAllLanguages
+	 */
+	public function setRenderAllLanguages($renderAllLanguages) {
+		$this->renderAllLanguages = (bool)$renderAllLanguages;
+	}
+
+	/**
+	 * Removes language parameters from url and unique url's
+	 *
+	 * @param array $eIdUris
+	 * @return array
+	 */
+	protected function stripLanguage(array $eIdUris) {
+		if ($this->isRenderAllLanguages() && !empty($eIdUris)) {
+			foreach ($eIdUris as $key => $eIdScript) {
+				if (strpos($eIdScript, '?') === false) {
+					continue;
+				}
+
+				list($path, $query) = explode('?', $eIdScript, 2);
+				$query = array_filter(
+					explode('&', $query),
+					function ($paramSegment) {
+						return strpos($paramSegment, 'L=') !== 0;
+					}
+				);
+
+				// sort parameters
+				sort($query);
+
+				$eIdUris[$key] = $path . '?' . implode('&', $query);
+			}
+
+			$eIdUris = array_unique($eIdUris);
+		}
+
+		return $eIdUris;
+	}
+
+	/**
+	 * @param array $eIdUris
+	 * @return array
+	 * @throws \InvalidArgumentException
+	 */
+	protected function expandEidUriWithLanguages(array $eIdUris) {
+		if ($this->isRenderAllLanguages() && !empty($eIdUris)) {
+			$eIdUris = $this->stripLanguage($eIdUris);
+
+			/** @var \DmitryDulepov\DdGooglesitemap\Helper\SysLanguageHelper $instance */
+			$instance     = GeneralUtility::makeInstance('DmitryDulepov\\DdGooglesitemap\\Helper\\SysLanguageHelper');
+			$languageUids = array_keys($instance->getSysLanguages());
+
+			$uris = array();
+			if (!empty($languageUids)) {
+				foreach ($languageUids as $language) {
+					foreach ($eIdUris as $eIdScript) {
+						// remove possible anchor, which make no sense
+						$anchorFree = explode('#', $eIdScript, 2);
+						$uris[]     = rtrim($anchorFree[0], '&') . '&L=' . $language;
+					}
+				}
+
+				$eIdUris = $uris;
+			}
+		}
+
+		return $eIdUris;
+	}
+
+	/**
 	 * Creates a base url for sitemaps.
 	 *
 	 * @return void
@@ -271,7 +357,8 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 */
 	protected function buildSitemapFileFormat() {
 		$fileParts = pathinfo($this->indexFilePath);
-		$this->sitemapFileFormat = $fileParts['dirname'] . '/' . $fileParts['filename'] . '_sitemap_%05d_%05d.xml';
+		$directoryPrefix = ($fileParts['dirname'] === '.'? '' : $fileParts['dirname'] . '/');
+		$this->sitemapFileFormat = $directoryPrefix . $fileParts['filename'] . '_sitemap_%05d_%05d.xml';
 	}
 
 	/**

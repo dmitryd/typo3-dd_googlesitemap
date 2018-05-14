@@ -31,7 +31,7 @@ namespace DmitryDulepov\DdGooglesitemap\Renderers;
  * @package	TYPO3
  * @subpackage	tx_ddgooglesitemap
  */
-class StandardSitemapRenderer extends AbstractSitemapRenderer {
+class StandardSitemapRenderer extends AbstractExtendedSitemapRenderer {
 
 	/**
 	 * Creates end tags for this sitemap.
@@ -51,7 +51,8 @@ class StandardSitemapRenderer extends AbstractSitemapRenderer {
 	 */
 	public function getStartTags() {
 		return '<?xml version="1.0" encoding="UTF-8"?>' . chr(10) .
-			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . chr(10);
+			'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'.
+				' xmlns:xhtml="http://www.w3.org/1999/xhtml">' . chr(10);
 	}
 
 	/**
@@ -63,10 +64,11 @@ class StandardSitemapRenderer extends AbstractSitemapRenderer {
 	 * @param	string	$changeFrequency	Unused for news
 	 * @param	string	$keywords	Keywords for this entry
 	 * @param	mixed	$priority	Priority (numeric, 1-10, if passed)
+     * @param   array|null $additionalParams
 	 * @return	string	Generated entry content
 	 * @see tx_ddgooglesitemap_abstract_renderer::renderEntry()
 	 */
-	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '') {
+	public function renderEntry($url, $title, $lastModification = 0, $changeFrequency = '', $keywords = '', $priority = '', $additionalParams = null) {
 		$content = '<url>';
 		$content .= '<loc>' . $url . '</loc>';
 		if ($lastModification) {
@@ -78,6 +80,11 @@ class StandardSitemapRenderer extends AbstractSitemapRenderer {
 		if ($priority != '') {
 			$content .= '<priority>' . sprintf('%0.1F', $priority/10) . '</priority>';
 		}
+
+		if (isset($additionalParams['hreflangs'])) {
+			$content .= $this->renderAlternateHrefLinks($additionalParams['hreflangs']);
+		}
+
 		$content .= '</url>';
 
 		return $content;
