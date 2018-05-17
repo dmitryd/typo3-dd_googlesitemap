@@ -58,4 +58,4 @@ $tempColumns = Array (
     'pages', 'miscellaneous', 'tx_ddgooglesitemap_priority, tx_ddgooglesitemap_change_frequency'
 );
 
-unset($tempColumn);
+unset($tempColumns);
