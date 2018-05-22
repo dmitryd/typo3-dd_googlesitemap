@@ -21,6 +21,8 @@
 			<label index="scheduler.title">Generate offline sitemap</label>
 			<label index="scheduler.description">Generates offline index file and sitemaps</label>
 			<label index="scheduler.eIDFieldLabel">eID script URLs (one per line):</label>
+			<label index="scheduler.renderAllLanguages">Iterate over all languages:</label>
+			<label index="scheduler.renderAllLanguages.notice">NOTICE: If this is active, all L-Parameters will removed from eID-Urls (and unique)</label>
 			<label index="scheduler.indexFieldLabel">Index file path:</label>
 			<label index="scheduler.maxUrlsPerSitemapLabel">URLs per sitemap:</label>
 			<label index="scheduler.error.missingHost">Host is missing or does not match any of TYPO3 hosts from the installation. Did you add a domain record in TYPO3?</label>

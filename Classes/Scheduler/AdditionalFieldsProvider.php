@@ -62,21 +62,37 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		}
 		$indexFilePath = $task->getIndexFilePath();
 		$maxUrlsPerSitemap = $task->getMaxUrlsPerSitemap();
+		$isRenderAllLanguages = $task->isRenderAllLanguages();
+
+		// try to get description
+		/** @noinspection PhpUndefinedMethodInspection */
+		$renderLangHint = $GLOBALS['LANG']->sL('LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.renderAllLanguages.notice');
 
 		$additionalFields['eIdUrl'] = array(
-			'code'     => '<textarea style="width:350px;height:200px" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
+			'code'     => '<textarea class="form-control" name="tx_scheduler[eIdUrl]" wrap="off">' . htmlspecialchars($url) . '</textarea>',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.eIDFieldLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
 		);
+		$additionalFields['renderAllLanguages'] = array(
+			'code'     => '<input type="hidden" name="tx_scheduler[renderAllLanguages]" value="0" />'
+						  . '<input class="checkbox" type="checkbox" name="tx_scheduler[renderAllLanguages]" value="1" '
+						  . ($isRenderAllLanguages ? 'checked' : '')
+						  . ' style="display: inline-block; margin-right: 10px;"'
+						  . ' />' . $renderLangHint,
+			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.renderAllLanguages',
+			'cshKey'   => '',
+			'cshLabel' => ''
+		);
+
 		$additionalFields['indexFilePath'] = array(
-			'code'     => '<input class="wide" type="text" name="tx_scheduler[indexFilePath]" value="' . htmlspecialchars($indexFilePath) . '" />',
+			'code'     => '<input class="wide form-control" type="text" name="tx_scheduler[indexFilePath]" value="' . htmlspecialchars($indexFilePath) . '" />',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.indexFieldLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
 		);
 		$additionalFields['maxUrlsPerSitemap'] = array(
-			'code'     => '<input type="text" name="tx_scheduler[maxUrlsPerSitemap]" value="' . $maxUrlsPerSitemap . '" />',
+			'code'     => '<input class="form-control" type="text" name="tx_scheduler[maxUrlsPerSitemap]" value="' . $maxUrlsPerSitemap . '" />',
 			'label'    => 'LLL:EXT:dd_googlesitemap/locallang.xml:scheduler.maxUrlsPerSitemapLabel',
 			'cshKey'   => '',
 			'cshLabel' => ''
@@ -96,6 +112,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		$errors = array();
 
 		$this->validateEIdUrl($submittedData, $errors);
+		$this->validateRenderAllLanguages($submittedData, $errors);
 		$this->validateMaxUrlsPerSitemap($submittedData, $errors);
 		$this->validateIndexFilePath($submittedData, $errors);
 
@@ -118,6 +135,7 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 	public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
 		/** @var \DmitryDulepov\DdGooglesitemap\Scheduler\Task $task */
 		$task->setEIdScriptUrl($submittedData['eIdUrl']);
+		$task->setRenderAllLanguages($submittedData['renderAllLanguages']);
 		$task->setMaxUrlsPerSitemap($submittedData['maxUrlsPerSitemap']);
 		$task->setIndexFilePath($submittedData['indexFilePath']);
 	}
@@ -149,6 +167,20 @@ class AdditionalFieldsProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldPr
 		$submittedData['maxUrlsPerSitemap'] = intval($submittedData['maxUrlsPerSitemap']);
 		if ($submittedData['maxUrlsPerSitemap'] <= 0) {
 			$errors[] = 'scheduler.error.badNumberOfUrls';
+		}
+	}
+
+	/**
+	 * Validates checkbox for render all languages
+	 *
+	 * @param array $submittedData
+	 * @param array $errors
+	 * @return void
+	 */
+	protected function validateRenderAllLanguages(array &$submittedData, array &$errors) {
+		$submittedData['renderAllLanguages'] = (string)$submittedData['renderAllLanguages'];
+		if (!in_array($submittedData['renderAllLanguages'], array('0','1'), true)) {
+			$errors[] = 'scheduler.renderAllLanguages.notice';
 		}
 	}
 

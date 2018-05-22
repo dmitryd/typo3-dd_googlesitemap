@@ -117,4 +117,14 @@ abstract class AbstractSitemapGenerator {
 	 * @return void
 	 */
 	abstract protected function generateSitemapContent();
+
+	/**
+	 * @return array
+	 * @throws \InvalidArgumentException
+	 */
+	protected function getAlternateSysLanguageIds() {
+		/** @var \DmitryDulepov\DdGooglesitemap\Helper\SysLanguageHelper $instance */
+		$instance = GeneralUtility::makeInstance('DmitryDulepov\\DdGooglesitemap\\Helper\\SysLanguageHelper');
+		return $instance->getSysLanguages();
+	}
 }

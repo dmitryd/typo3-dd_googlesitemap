@@ -24,7 +24,7 @@
 
 namespace DmitryDulepov\DdGooglesitemap\Generator;
 
-use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
+use DmitryDulepov\DdGooglesitemap\Renderers\AbstractExtendedSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
@@ -55,7 +55,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	/**
 	 * A sitemap renderer
 	 *
-	 * @var	AbstractSitemapRenderer
+	 * @var AbstractExtendedSitemapRenderer
 	 */
 	protected $renderer;
 
@@ -70,7 +70,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	protected $hookObjects;
 
 	/**
-	 * Initializes the instance of this class. This constructir sets starting
+	 * Initializes the instance of this class. This constructor sets starting
 	 * point for the sitemap to the current page id
 	 */
 	public function __construct() {
@@ -120,7 +120,8 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	/**
 	 * Generates sitemap for pages (<url> entries in the sitemap)
 	 *
-	 * @return	void
+	 * @return    void
+	 * @throws \InvalidArgumentException
 	 */
 	protected function generateSitemapContent() {
 		// Workaround: we want the sysfolders back into the menu list!
@@ -154,7 +155,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			// Notice: no sorting (for speed)!
 			$GLOBALS['TSFE']->sys_page->sys_language_uid = $GLOBALS['TSFE']->config['config']['sys_language_uid'];
 			$morePages = $GLOBALS['TSFE']->sys_page->getMenu($pageInfo['uid'], '*', '', '', false);
-			$this->removeNonTranslatedPages($morePages);
+			$morePages = $this->filterNonTranslatedPages($morePages);
 			$this->pageList = array_merge($this->pageList, array_values($morePages));
 			unset($morePages);
 		}
@@ -178,21 +179,49 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	/**
 	 * Exclude pages from given list
 	 *
+	 * @deprecated use filterNonTranslatedPages
+	 *
 	 * @param array $pages
 	 * @return void
 	 */
 	protected function removeNonTranslatedPages(array &$pages) {
-		$language = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
-		foreach ($pages as $pageUid => $page) {
-			// Hide page in default language
-			if ($language === 0 && GeneralUtility::hideIfDefaultLanguage($page['l18n_cfg'])) {
-				unset($pages[$pageUid]);
-			}
-			elseif ($language !== 0 && !isset($page['_PAGES_OVERLAY']) && GeneralUtility::hideIfNotTranslated($page['l18n_cfg'])) {
-				// Hide page if no translation is set
-				unset($pages[$pageUid]);
-			}
+		$pages = $this->filterNonTranslatedPages($pages);
+	}
+
+	/**
+	 * Get only translated pages
+	 *
+	 * @param array    $pages
+	 * @param int|null $languageUid
+	 * @return array
+	 */
+	protected function filterNonTranslatedPages(array $pages, $languageUid = null) {
+		if($languageUid === null) {
+			$languageUid = (int)$GLOBALS['TSFE']->config['config']['sys_language_uid'];
 		}
+
+		$filterFunction = function ($page) use($languageUid) {
+			if ($languageUid === 0 && GeneralUtility::hideIfDefaultLanguage($page['l18n_cfg'])) {
+				return false;
+			}
+
+			if ($languageUid !== 0 && !isset($page['_PAGES_OVERLAY']) && GeneralUtility::hideIfNotTranslated($page['l18n_cfg'])) {
+				return false;
+			}
+
+			return true;
+		};
+
+		// requested language === current language
+		if ($languageUid === (int)$GLOBALS['TSFE']->config['config']['sys_language_uid']) {
+			return array_filter($pages, $filterFunction);
+		}
+
+		// other language: load overlay information
+		$overlayPages = $GLOBALS['TSFE']->sys_page->getPagesOverlay($pages, $languageUid);
+		$overlayPages = array_filter($overlayPages, $filterFunction);
+
+		return array_intersect_key($pages, $overlayPages);
 	}
 
 	/**
@@ -208,14 +237,18 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	/**
 	 * Outputs information about single page
 	 *
-	 * @param	array	$pageInfo	Page information (needs 'uid' and 'SYS_LASTCHANGED' columns)
-	 * @return	void
+	 * @param    array $pageInfo Page information (needs 'uid' and 'SYS_LASTCHANGED' columns)
+	 * @return    void
+	 * @throws \InvalidArgumentException
 	 */
 	protected function writeSingleUrl(array $pageInfo) {
 		if ($this->shouldIncludePageInSitemap($pageInfo) && ($url = $this->getPageLink($pageInfo['uid']))) {
 			echo $this->renderer->renderEntry($url, $pageInfo['title'],
 				$this->getLastMod($pageInfo),
-				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority']);
+				$this->getChangeFrequency($pageInfo), '', $pageInfo['tx_ddgooglesitemap_priority'],
+				array(
+					'hreflangs' => $this->getAlternateLinks($pageInfo)
+				));
 
 			// Post-process current page and possibly append data
 			// @see http://forge.typo3.org/issues/45637
@@ -281,17 +314,51 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	}
 
 	/**
+	 * @param array $pageInfo
+	 * @return array
+	 * @throws \InvalidArgumentException
+	 */
+	protected function getAlternateLinks($pageInfo) {
+		$links                = array();
+		$pageUid              = $pageInfo['uid'];
+		$alternativeLanguages = $this->getAlternateSysLanguageIds();
+		if (!empty($alternativeLanguages)) {
+			foreach ($alternativeLanguages as $languageUid => $locale) {
+				$translatedPage = $this->filterNonTranslatedPages(array($pageInfo), $languageUid);
+				if(empty($translatedPage)) {
+					continue;
+				}
+
+				// can generate url and it different to target url
+				if (($url = $this->getPageLink($pageUid, $languageUid))) {
+					$links[$locale] = $url;
+				}
+			}
+		}
+
+		return $links;
+	}
+
+	/**
 	 * Creates a link to a single page
 	 *
-	 * @param	array	$pageId	Page ID
+	 * @param	int	$pageId	Page ID
+	 * @param	int	$languageId	Language Id
 	 * @return	string	Full URL of the page including host name (escaped)
 	 */
-	protected function getPageLink($pageId) {
+	protected function getPageLink($pageId, $languageId = null) {
 		$conf = array(
 			'parameter' => $pageId,
 			'returnLast' => 'url',
+			'forceAbsoluteUrl' => 1
 		);
-		$link = htmlspecialchars($this->cObj->typoLink('', $conf));
-		return GeneralUtility::locationHeaderUrl($link);
+
+		if ($languageId !== null) {
+			$conf['additionalParams'] = '&L=' . $languageId;
+			// cHash is important for e.g. realUrl
+			$conf['useCacheHash'] = true;
+		}
+
+		return htmlspecialchars($this->cObj->typoLink('', $conf));
 	}
 }
