@@ -26,13 +26,13 @@ $EM_CONF[$_EXTKEY] = array (
   'modify_tables' => 'pages',
   'clearCacheOnLoad' => 0,
   'lockType' => '',
-  'author_company' => 'SIA "ACCIO"',
-  'version' => '2.1.4',
+  'author_company' => '',
+  'version' => '2.2.0',
   'constraints' => 
   array (
     'depends' => 
     array (
-      'typo3' => '6.2.0-8.999.999',
+      'typo3' => '8.7.0-8.7.999',
     ),
     'conflicts' => 
     array (
@@ -45,7 +45,7 @@ $EM_CONF[$_EXTKEY] = array (
   array (
   ),
   'user' => 'dmitry',
-  'comment' => 'Warning! Database update required if you upgrade from versions less than 2.1.0!',
+  'comment' => 'Maintenance release',
 );
 
 ?>

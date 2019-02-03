@@ -27,6 +27,7 @@ namespace DmitryDulepov\DdGooglesitemap\Generator;
 use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * This class produces sitemap for pages
@@ -60,7 +61,15 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	protected $renderer;
 
 	/** @var array */
-	protected $excludedPageTypes = array(0, 3, 4, 5, 6, 7, 199, 254, 255);
+	protected $excludedPageTypes = array(
+		PageRepository::DOKTYPE_LINK,
+		PageRepository::DOKTYPE_SHORTCUT,
+		PageRepository::DOKTYPE_BE_USER_SECTION,
+		PageRepository::DOKTYPE_MOUNTPOINT,
+		PageRepository::DOKTYPE_SPACER,
+		PageRepository::DOKTYPE_SYSFOLDER,
+		PageRepository::DOKTYPE_RECYCLER
+	);
 
 	/**
 	 * Hook objects for post-processing
@@ -85,7 +94,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 		if ($pid === 0 || $pid == $GLOBALS['TSFE']->id) {
 			$this->pageList[$GLOBALS['TSFE']->id] = array(
 				'uid' => $GLOBALS['TSFE']->id,
-				'SYS_LASTCHANGED' => $GLOBALS['TSFE']->page['SYS_LASTCHANGED'],
+				'SYS_LASTCHANGED' => $this->getLastModificationDate($GLOBALS['TSFE']->page),
 				'tx_ddgooglesitemap_lastmod' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_priority'],
 				'tx_ddgooglesitemap_change_frequency' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_change_frequency'],
@@ -97,7 +106,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			$page = $GLOBALS['TSFE']->sys_page->getPage($pid);
 			$this->pageList[$page['uid']] = array(
 				'uid' => $page['uid'],
-				'SYS_LASTCHANGED' => $page['SYS_LASTCHANGED'],
+				'SYS_LASTCHANGED' => $this->getLastModificationDate($page),
 				'tx_ddgooglesitemap_lastmod' => $page['tx_ddgooglesitemap_lastmod'],
 				'tx_ddgooglesitemap_priority' => $page['tx_ddgooglesitemap_priority'],
 				'tx_ddgooglesitemap_change_frequency' => $GLOBALS['TSFE']->page['tx_ddgooglesitemap_change_frequency'],
@@ -168,7 +177,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	 */
 	protected function getLastMod(array $pageInfo) {
 		$lastModDates = GeneralUtility::intExplode(',', $pageInfo['tx_ddgooglesitemap_lastmod']);
-		$lastModDates[] = intval($pageInfo['SYS_LASTCHANGED']);
+		$lastModDates[] = $this->getLastModificationDate($pageInfo);
 		rsort($lastModDates, SORT_NUMERIC);
 		reset($lastModDates);
 
@@ -201,8 +210,21 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	 * @param array $pageInfo
 	 * @return bool
 	 */
-	protected function shouldIncludePageInSitemap(array $pageInfo) {
-		return !$pageInfo['no_search'] && !in_array($pageInfo['doktype'], $this->excludedPageTypes);
+	protected function shouldIncludePageInSitemap(array $pageInfo)
+	{
+		if ($pageInfo['no_search']) {
+			return false;
+		}
+
+		$dokType = $pageInfo['doktype'];
+
+		// for translated pages get doktype of original language parent, since this determines behaviour
+		if ($pageInfo['_PAGES_OVERLAY']) {
+			$origPage = $GLOBALS['TSFE']->sys_page->getRawRecord('pages', $pageInfo['uid'], 'doktype');
+			$dokType = $origPage['doktype'];
+		}
+
+		return $dokType && !in_array($dokType, $this->excludedPageTypes);
 	}
 
 	/**
@@ -266,7 +288,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				unset($timeValues[$k]);
 			}
 		}
-		$timeValues[] = $pageInfo['SYS_LASTCHANGED'];
+		$timeValues[] = $this->getLastModificationDate($pageInfo);
 		$timeValues[] = time();
 		sort($timeValues, SORT_NUMERIC);
 		$sum = 0;
@@ -278,6 +300,31 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 				($average <= 24*60*60 ? 'daily' :
 				($average <= 60*60 ? 'hourly' :
 				($average <= 14*24*60*60 ? 'weekly' : 'monthly'))));
+	}
+
+	/**
+	 * Fetches "last change" value for a page. If the given page is a shortcut page,
+	 * fetches target page modification date instead.
+	 *
+	 * @param array $pageInformation
+	 * @return int
+	 */
+	protected function getLastModificationDate(array $pageInformation) {
+		static $cache = array();
+
+		$pageUid = (int)$pageInformation['uid'];
+		if (!isset($cache[$pageUid])) {
+			if ((int)$pageInformation['doktype'] === PageRepository::DOKTYPE_SHORTCUT) {
+				$pageInformation = $GLOBALS['TSFE']->getPageShortcut(
+					$pageInformation['shortcut'],
+					$pageInformation['shortcut_mode'],
+					$pageUid
+				);
+			}
+			$cache[$pageUid] = (int)$pageInformation['SYS_LASTCHANGED'];
+		}
+
+		return $cache[$pageUid];
 	}
 
 	/**
