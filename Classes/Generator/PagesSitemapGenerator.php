@@ -201,8 +201,21 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	 * @param array $pageInfo
 	 * @return bool
 	 */
-	protected function shouldIncludePageInSitemap(array $pageInfo) {
-		return !$pageInfo['no_search'] && !in_array($pageInfo['doktype'], $this->excludedPageTypes);
+	protected function shouldIncludePageInSitemap(array $pageInfo)
+	{
+		if ($pageInfo['no_search']) {
+			return false;
+		}
+
+		$dokType = $pageInfo['doktype'];
+
+		// for translated pages get doktype of original language parent, since this determines behaviour
+		if ($pageInfo['_PAGES_OVERLAY']) {
+			$origPage = $GLOBALS['TSFE']->sys_page->getRawRecord('pages', $pageInfo['uid'], 'doktype');
+			$dokType = $origPage['doktype'];
+		}
+
+		return !in_array($dokType, $this->excludedPageTypes);
 	}
 
 	/**
