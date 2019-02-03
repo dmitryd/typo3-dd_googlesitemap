@@ -27,6 +27,7 @@ namespace DmitryDulepov\DdGooglesitemap\Generator;
 use DmitryDulepov\DdGooglesitemap\Renderers\AbstractSitemapRenderer;
 use \TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
  * This class produces sitemap for pages
@@ -60,7 +61,15 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 	protected $renderer;
 
 	/** @var array */
-	protected $excludedPageTypes = array(0, 3, 4, 5, 6, 7, 199, 254, 255);
+	protected $excludedPageTypes = array(
+		PageRepository::DOKTYPE_LINK,
+		PageRepository::DOKTYPE_SHORTCUT,
+		PageRepository::DOKTYPE_BE_USER_SECTION,
+		PageRepository::DOKTYPE_MOUNTPOINT,
+		PageRepository::DOKTYPE_SPACER,
+		PageRepository::DOKTYPE_SYSFOLDER,
+		PageRepository::DOKTYPE_RECYCLER
+	);
 
 	/**
 	 * Hook objects for post-processing
@@ -215,7 +224,7 @@ class PagesSitemapGenerator extends AbstractSitemapGenerator {
 			$dokType = $origPage['doktype'];
 		}
 
-		return !in_array($dokType, $this->excludedPageTypes);
+		return $dokType && !in_array($dokType, $this->excludedPageTypes);
 	}
 
 	/**
