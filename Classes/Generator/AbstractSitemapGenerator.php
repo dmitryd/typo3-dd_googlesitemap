@@ -91,7 +91,7 @@ abstract class AbstractSitemapGenerator {
 	 * @return void
 	 */
 	public function main() {
-		header('Content-type: text/xml');
+		header('Content-type: application/xml');
 		if ($this->renderer) {
 			echo $this->renderer->getStartTags();
 		}
