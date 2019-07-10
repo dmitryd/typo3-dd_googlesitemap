@@ -27,21 +27,21 @@ $EM_CONF[$_EXTKEY] = array (
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'author_company' => '',
-  'version' => '2.2.0',
-  'constraints' => 
+  'version' => '2.2.1',
+  'constraints' =>
   array (
-    'depends' => 
+    'depends' =>
     array (
       'typo3' => '8.7.0-8.7.999',
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),
-  'suggests' => 
+  'suggests' =>
   array (
   ),
   'user' => 'dmitry',
