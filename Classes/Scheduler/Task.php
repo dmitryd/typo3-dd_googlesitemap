@@ -269,10 +269,10 @@ class Task extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 *
 	 * @return void
 	 */
-	protected function buildSitemapFileFormat() {
-		$fileParts = pathinfo($this->indexFilePath);
-		$this->sitemapFileFormat = $fileParts['dirname'] . '/' . $fileParts['filename'] . '_sitemap_%05d_%05d.xml';
-	}
+    protected function buildSitemapFileFormat() {
+        $fileParts = pathinfo($this->indexFilePath);
+        $this->sitemapFileFormat = $fileParts['dirname'] === '.' ? $fileParts['filename'] . '_sitemap_%05d_%05d.xml' : $fileParts['dirname'] . '/' . $fileParts['filename'] . '_sitemap_%05d_%05d.xml';
+    }
 
 	/**
 	 * Returns the index file url.
