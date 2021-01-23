@@ -3,7 +3,6 @@
     "type": "typo3-cms-extension",
     "description": "Google sitemaps for TYPO3",
     "homepage": "https://github.com/dmitryd/typo3-dd_googlesitemap",
-    "version": "2.2.0",
     "license": "LGPL-3.0+",
     "keywords": [
         "TYPO3",
