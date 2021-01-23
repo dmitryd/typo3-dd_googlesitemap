@@ -22,7 +22,7 @@
         }
     },
     "replace": {
-        "dd_googlesitemap": "self.version",
+        "dmitryd/typo3-dd-googlesitemap": "self.version",  
         "typo3-ter/dd-googlesitemap": "self.version"
     },
     "authors": [
