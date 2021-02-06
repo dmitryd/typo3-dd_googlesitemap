@@ -82,6 +82,7 @@ class EntryPoint {
 		$tsfe->connectToDB();
 		$tsfe->initFEuser();
 		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+		$tsfe->checkAlternativeIdMethods();
 		$tsfe->determineId();
 		$tsfe->initTemplate();
 		$tsfe->getConfigArray();
